@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtTicket Moldova - Билеты на культурные мероприятия в Кишинёве</title>
+    <meta name="description" content="Покупайте билеты на концерты, театральные постановки, выставки и другие культурные мероприятия в Кишинёве и по всей Молдове.">
+    <meta name="keywords" content="билеты, Молдова, Кишинёв, концерты, выставки, театр, балет, опера, кино">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="~/Content/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<!-- Навигационная панель -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+            <img src="https://via.placeholder.com/150x50?text=ArtTicket" alt="ArtTicket Moldova" height="40">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index", "Home")">Главная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index", "Events")">Мероприятия</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index", "Venues")">Площадки</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("About", "Home")">О нас</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Contact", "Home")">Контакты</a>
+                </li>
+                @if (Request.IsAuthenticated && Session["UserRole"] != null && Session["UserRole"].ToString() == "Admin")
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Администрирование
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                            <li><a class="dropdown-item" href="@Url.Action("Index", "Admin")">Dashboard</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("Admin", "Orders")">Управление заказами</a></li>
+                        </ul>
+                    </li>
+                }
+            </ul>
+            <div class="d-flex ms-auto">
+                @if (Request.IsAuthenticated)
+                {
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            @Session["UserName"]
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="@Url.Action("Profile", "Account")">Профиль</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("MyOrders", "Orders")">Мои заказы</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")">Выйти</a></li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <a href="@Url.Action("Login", "Account")" class="btn btn-outline-light me-2">Войти</a>
+                    <a href="@Url.Action("Register", "Account")" class="btn btn-light">Регистрация</a>
+                }
+            </div>
+        </div>
+    </div>
+</nav>
+
+@RenderBody()
+
+<!-- Подвал сайта -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <h5>ArtTicket Moldova</h5>
+                <p>Ваш проводник в мир искусства и развлечений в Молдове</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="social-icon"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="bi bi-telegram"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <h5>Разделы</h5>
+                <ul class="footer-links">
+                    <li><a href="#">Главная</a></li>
+                    <li><a href="#events">Мероприятия</a></li>
+                    <li><a href="#categories">Категории</a></li>
+                    <li><a href="#about">О нас</a></li>
+                    <li><a href="#contact">Контакты</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <h5>Помощь</h5>
+                <ul class="footer-links">
+                    <li><a href="#">Как купить билет</a></li>
+                    <li><a href="#">Вопросы и ответы</a></li>
+                    <li><a href="#">Возврат билетов</a></li>
+                    <li><a href="#">Политика конфиденциальности</a></li>
+                    <li><a href="#">Пользовательское соглашение</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <h5>Партнерам</h5>
+                <ul class="footer-links">
+                    <li><a href="#">Организаторам мероприятий</a></li>
+                    <li><a href="#">Рекламодателям</a></li>
+                    <li><a href="#">Площадкам</a></li>
+                    <li><a href="#">Блогерам</a></li>
+                    <li><a href="#">Корпоративным клиентам</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2023 ArtTicket Moldova. Все права защищены.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p>Дизайн и разработка: <a href="#">Команда ArtTicket Moldova</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Кнопка "Наверх" -->
+<a href="#" class="back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+<!-- JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Изменение фона навигационной панели при прокрутке
+    window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('navbar-scrolled');
+        } else {
+            navbar.classList.remove('navbar-scrolled');
+        }
+    });
+
+    // Плавная прокрутка для якорных ссылок
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId !== '#') {
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        });
+    });
+
+    // Кнопка "Наверх"
+    const backToTopButton = document.querySelector('.back-to-top');
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+            backToTopButton.classList.add('show');
+        } else {
+            backToTopButton.classList.remove('show');
+        }
+    });
+
+    backToTopButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    // Функция для анимации при скролле
+    function checkScroll() {
+        const elements = document.querySelectorAll('.animate-on-scroll');
+
+        elements.forEach(element => {
+            const elementPosition = element.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+
+            if (elementPosition.top < windowHeight * 0.9) {
+                element.classList.add('animated');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', checkScroll);
+    window.addEventListener('load', checkScroll);
+</script>
+
+@RenderSection("Scripts", required: false)
+
+</body>
+</html>

@@ -1,0 +1,373 @@
+﻿@{
+    ViewBag.Title = "Возврат билетов - ArtTicket Moldova";
+}
+
+<style>
+    .hero-mini {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+        url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center/cover;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+    }
+    
+    .refund-section {
+        padding: 80px 0;
+        background-color: #f8f9fa;
+    }
+    
+    .refund-card {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .refund-steps {
+        margin: 40px 0;
+    }
+    
+    .step-item {
+        display: flex;
+        margin-bottom: 30px;
+    }
+    
+    .step-number {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        margin-right: 20px;
+        flex-shrink: 0;
+    }
+    
+    .step-content h4 {
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #333;
+    }
+    
+    .step-content p {
+        color: #6c757d;
+        margin-bottom: 0;
+    }
+    
+    .policy-highlight {
+        background-color: #f8f9fa;
+        border-left: 4px solid #6a3093;
+        padding: 20px;
+        margin: 20px 0;
+    }
+    
+    .policy-highlight p {
+        margin-bottom: 0;
+        font-weight: 500;
+    }
+    
+    .timeframe-table {
+        width: 100%;
+        margin-bottom: 30px;
+        border-collapse: collapse;
+    }
+    
+    .timeframe-table th, .timeframe-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .timeframe-table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .refund-alert {
+        padding: 15px 20px;
+        background-color: #f8d7da;
+        color: #721c24;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    
+    .refund-form label {
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 8px;
+    }
+    
+    .contact-box {
+        background: linear-gradient(to right, #ff7a59, #ff935f);
+        border-radius: 10px;
+        padding: 30px;
+        color: white;
+        margin-top: 30px;
+    }
+    
+    .contact-box h4 {
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+    
+    .contact-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .contact-option {
+        flex: 1 0 calc(50% - 15px);
+        background: rgba(255, 255, 255, 0.2);
+        padding: 15px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .contact-option i {
+        font-size: 1.5rem;
+        margin-right: 10px;
+    }
+    
+    .contact-option p {
+        margin: 0;
+        font-weight: 500;
+    }
+</style>
+
+<!-- Мини-баннер -->
+<header class="hero-mini">
+    <div class="container">
+        <h1>Возврат билетов</h1>
+        <p>Информация о правилах и процедуре возврата билетов на мероприятия</p>
+    </div>
+</header>
+
+<!-- Основной контент -->
+<section class="refund-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Основная информация о возврате -->
+                <div class="refund-card">
+                    <h2>Политика возврата билетов</h2>
+                    <p>ArtTicket Moldova предоставляет возможность возврата билетов в соответствии с законодательством Республики Молдова о защите прав потребителей и следующими правилами:</p>
+                    
+                    <div class="policy-highlight">
+                        <p>Обращаем ваше внимание, что для различных мероприятий могут действовать индивидуальные условия возврата, которые указываются на странице конкретного мероприятия.</p>
+                    </div>
+                    
+                    <h3>Сроки и условия возврата</h3>
+                    <table class="timeframe-table">
+                        <thead>
+                            <tr>
+                                <th>Срок до мероприятия</th>
+                                <th>Возврат средств</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Более 10 дней</td>
+                                <td>100% стоимости билета за вычетом сервисного сбора</td>
+                            </tr>
+                            <tr>
+                                <td>От 5 до 10 дней</td>
+                                <td>70% стоимости билета за вычетом сервисного сбора</td>
+                            </tr>
+                            <tr>
+                                <td>От 3 до 5 дней</td>
+                                <td>50% стоимости билета за вычетом сервисного сбора</td>
+                            </tr>
+                            <tr>
+                                <td>Менее 3 дней</td>
+                                <td>Возврат не производится</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="refund-alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> Сервисный сбор (5-10% от стоимости билета) не подлежит возврату независимо от сроков отказа от посещения мероприятия.
+                    </div>
+                    
+                    <h3>Особые случаи</h3>
+                    <p><strong>В случае отмены мероприятия</strong> организатором, покупатели билетов имеют право на возврат полной стоимости билета, включая сервисный сбор. Средства будут автоматически возвращены на банковскую карту, с которой была произведена оплата, в течение 5-10 рабочих дней.</p>
+                    <p><strong>В случае переноса мероприятия</strong> на другую дату, билеты остаются действительными на новую дату. Если новая дата вам не подходит, вы можете запросить возврат в течение 10 дней с момента объявления о переносе, на тех же условиях, что и для отмены мероприятия.</p>
+                </div>
+                
+                <!-- Пошаговая инструкция -->
+                <div class="refund-card">
+                    <h2>Процедура возврата билета</h2>
+                    <p>Чтобы вернуть билет, следуйте инструкции ниже:</p>
+                    
+                    <div class="refund-steps">
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Войдите в личный кабинет</h4>
+                                <p>Авторизуйтесь на сайте ArtTicket Moldova используя email и пароль, указанные при регистрации.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Перейдите в раздел "Мои билеты"</h4>
+                                <p>В личном кабинете выберите раздел "Мои билеты", где отображаются все ваши приобретенные билеты.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step-item">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Выберите билет для возврата</h4>
+                                <p>Найдите билет, который хотите вернуть, и нажмите кнопку "Вернуть билет" рядом с ним.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step-item">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Заполните форму возврата</h4>
+                                <p>Укажите причину возврата и подтвердите свое решение, нажав кнопку "Подтвердить возврат".</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step-item">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h4>Получите подтверждение</h4>
+                                <p>После обработки вашего запроса вы получите email с подтверждением возврата и информацией о сумме и сроках возврата средств.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p>Средства будут возвращены на ту же банковскую карту, с которой была произведена оплата. Срок возврата зависит от вашего банка и может составлять от 3 до 14 банковских дней.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- FAQ -->
+                <div class="refund-card">
+                    <h3>Часто задаваемые вопросы</h3>
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                    Что делать, если мероприятие отменено?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    В случае отмены мероприятия организатором, мы автоматически инициируем процесс возврата средств в полном объеме включая сервисный сбор. Вы получите уведомление на email и SMS. Средства вернутся на вашу карту в течение 5-10 рабочих дней.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    Могу ли я вернуть только часть билетов?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Да, вы можете вернуть как все билеты в заказе, так и только часть из них. В разделе "Мои билеты" выберите конкретные билеты, которые хотите вернуть.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Как вернуть билет, если я не могу войти в личный кабинет?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Если у вас возникли проблемы с доступом к личному кабинету, вы можете связаться с нашей службой поддержки по телефону или email. Необходимо будет предоставить данные заказа и документ, подтверждающий покупку.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    Можно ли вернуть деньги на другую карту?
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    По правилам безопасности возврат средств производится только на ту же банковскую карту, с которой была произведена оплата. В исключительных случаях (например, если карта заблокирована или утеряна) возможен возврат на другую карту по письменному заявлению с предоставлением необходимых документов.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Контактная информация -->
+                <div class="contact-box">
+                    <h4>Нужна помощь?</h4>
+                    <p>Если у вас возникли вопросы по возврату билетов, свяжитесь с нашей службой поддержки:</p>
+                    
+                    <div class="contact-options">
+                        <a href="tel:+37322123456" class="contact-option">
+                            <i class="bi bi-telephone-fill"></i>
+                            <p>+373 (22) 123-456</p>
+                        </a>
+                        
+                        <a href="mailto:support@artticket.md" class="contact-option">
+                            <i class="bi bi-envelope-fill"></i>
+                            <p>support@artticket.md</p>
+                        </a>
+                        
+                        <a href="#" class="contact-option">
+                            <i class="bi bi-chat-dots-fill"></i>
+                            <p>Онлайн-чат</p>
+                        </a>
+                        
+                        <a href="#" class="contact-option">
+                            <i class="bi bi-whatsapp"></i>
+                            <p>WhatsApp</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // Для интерактивности аккордеона
+        document.addEventListener('DOMContentLoaded', function() {
+            var accordionButtons = document.querySelectorAll('.accordion-button');
+            
+            accordionButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var isExpanded = this.getAttribute('aria-expanded') === 'true';
+                    this.setAttribute('aria-expanded', !isExpanded);
+                    
+                    var targetId = this.getAttribute('data-bs-target');
+                    var targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        if (isExpanded) {
+                            targetElement.classList.remove('show');
+                        } else {
+                            targetElement.classList.add('show');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+} 

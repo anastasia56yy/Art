@@ -1,0 +1,302 @@
+﻿@{
+    ViewBag.Title = "Контакты - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .contact-header {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        padding: 40px 0;
+        margin-bottom: 40px;
+        color: white;
+        text-align: center;
+    }
+
+    .contact-title {
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .contact-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .contact-section-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .contact-info-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    .contact-icon {
+        font-size: 1.5rem;
+        color: #a044ff;
+        margin-right: 15px;
+        width: 30px;
+        text-align: center;
+    }
+
+    .contact-text {
+        flex-grow: 1;
+    }
+
+    .contact-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .contact-value {
+        color: #666;
+        line-height: 1.5;
+    }
+
+    .contact-map {
+        border-radius: 10px;
+        overflow: hidden;
+        height: 400px;
+        margin-bottom: 30px;
+    }
+
+    .contact-map iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        padding: 12px 15px;
+    }
+
+    .form-control:focus {
+        border-color: #a044ff;
+        box-shadow: 0 0 0 0.2rem rgba(160, 68, 255, 0.25);
+    }
+
+    .btn-contact {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 5px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .btn-contact:hover {
+        background: linear-gradient(45deg, #5b2580, #8f35e3);
+        color: white;
+    }
+
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .social-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        color: white;
+        border-radius: 50%;
+        margin: 0 10px;
+        font-size: 1.2rem;
+        transition: all 0.3s;
+    }
+
+    .social-icon:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        color: white;
+    }
+</style>
+
+<section class="contact-header">
+    <div class="container">
+        <h1 class="contact-title">Контакты</h1>
+        <p>Свяжитесь с нами, если у вас есть вопросы или предложения</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="contact-card">
+                <h2 class="contact-section-title">Напишите нам</h2>
+                
+                <form>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="name" class="form-label">Ваше имя</label>
+                                <input type="text" class="form-control" id="name" placeholder="Введите ваше имя">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email" class="form-label">Ваш email</label>
+                                <input type="email" class="form-control" id="email" placeholder="Введите ваш email">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject" class="form-label">Тема</label>
+                        <input type="text" class="form-control" id="subject" placeholder="Укажите тему сообщения">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message" class="form-label">Сообщение</label>
+                        <textarea class="form-control" id="message" rows="5" placeholder="Введите ваше сообщение"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-contact">
+                        <i class="fas fa-paper-plane me-2"></i> Отправить сообщение
+                    </button>
+                </form>
+            </div>
+            
+            <div class="contact-map">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d86456.62891263201!2d28.767299637305!3d47.02419201227333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40c97c3628b769a1%3A0x37d1d6305749dd3c!2z0JrQuNGI0LjQvdGR0LIsINCc0L7Qu9C00LDQstC40Y8!5e0!3m2!1sru!2sru!4v1668789042241!5m2!1sru!2sru" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="contact-card">
+                <h2 class="contact-section-title">Контактная информация</h2>
+                
+                <div class="contact-info-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="contact-text">
+                        <div class="contact-label">Адрес</div>
+                        <div class="contact-value">ул. Штефан чел Маре 202, Кишинёв, Молдова</div>
+                    </div>
+                </div>
+                
+                <div class="contact-info-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div class="contact-text">
+                        <div class="contact-label">Телефон</div>
+                        <div class="contact-value">+373 22 123456</div>
+                    </div>
+                </div>
+                
+                <div class="contact-info-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-text">
+                        <div class="contact-label">Email</div>
+                        <div class="contact-value">info@artticket.md</div>
+                    </div>
+                </div>
+                
+                <div class="contact-info-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="contact-text">
+                        <div class="contact-label">Часы работы</div>
+                        <div class="contact-value">
+                            Понедельник - Пятница: 9:00 - 18:00<br>
+                            Суббота: 10:00 - 15:00<br>
+                            Воскресенье: Выходной
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="social-icons">
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="contact-card">
+                <h2 class="contact-section-title">Часто задаваемые вопросы</h2>
+                
+                <div id="faqAccordion">
+                    <div class="accordion-item mb-3">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                Как купить билет?
+                            </button>
+                        </h3>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Выберите мероприятие, укажите количество билетов, добавьте в корзину и оплатите удобным способом. После оплаты вы получите электронный билет на указанный email.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item mb-3">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                Как вернуть билет?
+                            </button>
+                        </h3>
+                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Для возврата билета напишите нам на email с указанием номера заказа и причины возврата. Ознакомьтесь с нашей политикой возврата для более подробной информации.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                Как связаться с поддержкой?
+                            </button>
+                        </h3>
+                        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Вы можете связаться с нашей службой поддержки по телефону, email или через форму обратной связи на этой странице. Мы отвечаем в рабочее время в течение 24 часов.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
