@@ -1,0 +1,334 @@
+﻿@{
+    ViewBag.Title = "Вход - ArtTicket Moldova";
+}
+
+<style>
+    .auth-section {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+        url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center/cover;
+        padding: 40px 0;
+    }
+
+    .auth-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        max-width: 500px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .auth-header img {
+        width: 150px;
+        margin-bottom: 20px;
+    }
+
+    .auth-header h2 {
+        color: #333;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .auth-header p {
+        color: #666;
+        font-size: 0.95rem;
+    }
+
+    .form-floating {
+        margin-bottom: 20px;
+    }
+
+    .form-floating .form-control {
+        border-radius: 10px;
+        border: 2px solid #e0e0e0;
+        padding: 15px;
+        height: auto;
+    }
+
+    .form-floating .form-control:focus {
+        border-color: #6a3093;
+        box-shadow: 0 0 0 0.2rem rgba(106, 48, 147, 0.25);
+    }
+
+    .form-floating label {
+        padding: 15px;
+    }
+
+    .auth-btn {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        border: none;
+        border-radius: 10px;
+        padding: 15px;
+        font-weight: 600;
+        width: 100%;
+        margin-top: 10px;
+        transition: transform 0.3s ease;
+    }
+
+    .auth-btn:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(45deg, #5b2580, #8f35e3);
+    }
+
+    .social-login {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .social-login p {
+        color: #666;
+        margin-bottom: 15px;
+        position: relative;
+    }
+
+    .social-login p:before,
+    .social-login p:after {
+        content: "";
+        position: absolute;
+        height: 1px;
+        width: 45%;
+        background: #ddd;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .social-login p:before {
+        left: 0;
+    }
+
+    .social-login p:after {
+        right: 0;
+    }
+
+    .social-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .social-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #e0e0e0;
+        background: white;
+        transition: all 0.3s ease;
+        font-size: 1.2rem;
+    }
+
+    .social-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .social-btn.facebook {
+        color: #1877f2;
+    }
+
+    .social-btn.google {
+        color: #ea4335;
+    }
+
+    .social-btn.apple {
+        color: #000;
+    }
+
+    .auth-footer {
+        text-align: center;
+        margin-top: 25px;
+        color: #666;
+    }
+
+    .auth-footer a {
+        color: #6a3093;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+
+    .remember-forgot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .form-check-label {
+        color: #666;
+        cursor: pointer;
+    }
+
+    .forgot-link {
+        color: #6a3093;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .forgot-link:hover {
+        text-decoration: underline;
+    }
+
+    .password-field {
+        position: relative;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #666;
+        z-index: 10;
+    }
+
+    .language-selector {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+
+    .language-selector .btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+    }
+
+    .language-selector .dropdown-menu {
+        min-width: 100px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+    }
+
+    .back-to-home {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .back-to-home:hover {
+        color: rgba(255, 255, 255, 0.8);
+        transform: translateX(-5px);
+    }
+</style>
+
+<!-- Кнопка возврата на главную -->
+<a href="@Url.Action("Index", "Home")" class="back-to-home">
+    <i class="bi bi-arrow-left"></i>
+    На главную
+</a>
+
+<!-- Выбор языка -->
+<div class="language-selector dropdown">
+    <button class="btn dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        RU
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+        <li><a class="dropdown-item" href="#">RO</a></li>
+        <li><a class="dropdown-item" href="#">EN</a></li>
+    </ul>
+</div>
+
+<section class="auth-section">
+    <div class="container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <img src="https://via.placeholder.com/150x50?text=ArtTicket" alt="ArtTicket Moldova Logo">
+                <h2>Добро пожаловать!</h2>
+                <p>Войдите в свой аккаунт, чтобы продолжить</p>
+            </div>
+
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="text-danger">
+                    @Html.ValidationSummary()
+                </div>
+                
+                <div class="form-floating">
+                    <input type="email" class="form-control" id="emailInput" name="email" placeholder="Email">
+                    <label for="emailInput">Email</label>
+                </div>
+
+                <div class="form-floating password-field">
+                    <input type="password" class="form-control" id="passwordInput" name="password" placeholder="Пароль">
+                    <label for="passwordInput">Пароль</label>
+                    <i class="bi bi-eye password-toggle"></i>
+                </div>
+
+                <div class="remember-forgot">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe" value="true">
+                        <input type="hidden" name="rememberMe" value="false" />
+                        <label class="form-check-label" for="rememberMe">Запомнить меня</label>
+                    </div>
+                    <a href="#" class="forgot-link">Забыли пароль?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary auth-btn">Войти</button>
+            }
+
+            <div class="social-login">
+                <p>Или войдите через</p>
+                <div class="social-buttons">
+                    <button class="social-btn facebook">
+                        <i class="bi bi-facebook"></i>
+                    </button>
+                    <button class="social-btn google">
+                        <i class="bi bi-google"></i>
+                    </button>
+                    <button class="social-btn apple">
+                        <i class="bi bi-apple"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="auth-footer">
+                <p>Ещё нет аккаунта? <a href="@Url.Action("Register", "Account")">Зарегистрируйтесь</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // Переключение видимости пароля
+        document.querySelector('.password-toggle').addEventListener('click', function() {
+            const passwordInput = document.querySelector('#passwordInput');
+            const icon = this;
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        });
+    </script>
+} 

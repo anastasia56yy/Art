@@ -1,0 +1,294 @@
+﻿@model ArtTicket.Domain.Models.User
+
+@{
+    ViewBag.Title = "Профиль пользователя - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .profile-header {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        padding: 40px 0;
+        margin-bottom: 40px;
+        color: white;
+        text-align: center;
+    }
+
+    .profile-title {
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .profile-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+        height: 100%;
+    }
+
+    .user-avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        object-fit: cover;
+        border: 5px solid white;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .user-name {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .user-email {
+        color: #6c757d;
+        margin-bottom: 20px;
+    }
+
+    .info-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+    }
+
+    .info-icon {
+        color: #6a3093;
+        font-size: 1.2rem;
+        width: 40px;
+        text-align: center;
+    }
+
+    .info-text {
+        color: #333;
+        font-weight: 500;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .order-table th {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .badge-pending {
+        background-color: #ffc107;
+        color: #333;
+    }
+
+    .badge-paid {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .badge-cancelled {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .empty-message {
+        text-align: center;
+        padding: 30px;
+        color: #6c757d;
+    }
+
+    .empty-message i {
+        font-size: 3rem;
+        color: #e9ecef;
+        margin-bottom: 15px;
+    }
+
+    .review-card {
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        transition: all 0.3s;
+    }
+
+    .review-card:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .review-header {
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .review-title {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .review-date {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .review-body {
+        padding: 20px;
+    }
+
+    .star-rating {
+        color: #ffc107;
+        margin-bottom: 15px;
+    }
+
+    .review-comment {
+        color: #333;
+    }
+
+    .btn-details {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        color: white;
+        border: none;
+    }
+
+    .btn-details:hover {
+        background: linear-gradient(45deg, #5b2580, #8f35e3);
+        color: white;
+    }
+    
+    /* Добавлен отступ внизу для предотвращения наложения на футер */
+    .container {
+        margin-bottom: 50px;
+    }
+    
+    /* Ограничение высоты блока отзывов с прокруткой */
+    .reviews-container {
+        max-height: 500px;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+</style>
+
+<section class="profile-header">
+    <div class="container">
+        <h1 class="profile-title">Личный кабинет</h1>
+        <p>Управляйте своим профилем, просматривайте историю заказов и отзывы</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="profile-card">
+                <div class="text-center">
+                    <img src="https://ui-avatars.com/api/?name=@(Model.FirstName+"+"+Model.LastName)&background=6a3093&color=fff&size=150" class="user-avatar" alt="Аватар пользователя" />
+                    <h2 class="user-name">@Model.FirstName @Model.LastName</h2>
+                    <p class="user-email">@Model.Email</p>
+                </div>
+                
+                <ul class="info-list">
+                    <li class="info-item">
+                        <span class="info-icon"><i class="fas fa-phone"></i></span>
+                        <span class="info-text">@(string.IsNullOrEmpty(Model.PhoneNumber) ? "Не указан" : Model.PhoneNumber)</span>
+                    </li>
+                    <li class="info-item">
+                        <span class="info-icon"><i class="fas fa-calendar-alt"></i></span>
+                        <span class="info-text">С нами с @Model.RegistrationDate.ToString("dd.MM.yyyy")</span>
+                    </li>
+                    <li class="info-item">
+                        <span class="info-icon"><i class="fas fa-user-tag"></i></span>
+                        <span class="info-text">@(Model.Role == "Admin" ? "Администратор" : "Пользователь")</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="col-lg-8">
+            <div class="profile-card mb-4">
+                <h3 class="section-title"><i class="fas fa-shopping-cart me-2"></i> Мои заказы</h3>
+                
+                @if (Model.Orders != null && Model.Orders.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover order-table">
+                            <thead>
+                                <tr>
+                                    <th>№ заказа</th>
+                                    <th>Дата</th>
+                                    <th>Сумма</th>
+                                    <th>Статус</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in Model.Orders.OrderByDescending(o => o.OrderDate))
+                                {
+                                    <tr>
+                                        <td><strong>#@order.Id</strong></td>
+                                        <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                        <td>@order.TotalAmount.ToString("N0") MDL</td>
+                                        <td>
+                                            @switch(order.Status)
+                                            {
+                                                case "Pending":
+                                                    <span class="badge badge-pending">Ожидает оплаты</span>
+                                                    break;
+                                                case "Paid":
+                                                    <span class="badge badge-paid">Оплачен</span>
+                                                    break;
+                                                case "Cancelled":
+                                                    <span class="badge badge-cancelled">Отменен</span>
+                                                    break;
+                                                default:
+                                                    <span class="badge bg-secondary">@order.Status</span>
+                                                    break;
+                                            }
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("Details", "Orders", new { id = order.Id })" class="btn btn-sm btn-details">
+                                                <i class="fas fa-eye me-1"></i> Подробнее
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <a href="@Url.Action("MyOrders", "Orders")" class="btn btn-details">
+                            <i class="fas fa-list me-2"></i> Все заказы
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-message">
+                        <i class="fas fa-shopping-cart d-block"></i>
+                        <h4>У вас пока нет заказов</h4>
+                        <p>Перейдите в афишу, чтобы выбрать интересующее вас мероприятие</p>
+                        <a href="@Url.Action("Index", "Events")" class="btn btn-details mt-3">
+                            <i class="fas fa-calendar-alt me-2"></i> Перейти к афише
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div> 
