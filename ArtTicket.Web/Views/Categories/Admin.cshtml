@@ -1,0 +1,91 @@
+﻿@model IEnumerable<ArtTicket.Domain.Models.EventCategory>
+@{
+    ViewBag.Title = "Categories Management - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h2>Categories</h2>
+    </div>
+    <div class="admin-card-body">
+        <div class="d-flex justify-content-end mb-4">
+            <a href="@Url.Action("Create", "Categories")" class="btn btn-admin">
+                <i class="bi bi-plus-circle"></i> Add Category
+            </a>
+        </div>
+
+        @if (Model.Count() > 0)
+        {
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Events Count</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var category in Model)
+                        {
+                            <tr>
+                                <td>@category.Name</td>
+                                <td>
+                                    @if (category.Description != null && category.Description.Length > 100)
+                                    {
+                                        @(category.Description.Substring(0, 100) + "...")
+                                    }
+                                    else
+                                    {
+                                        @category.Description
+                                    }
+                                </td>
+                                <td>
+                                    @if (category.Events != null)
+                                    {
+                                        @category.Events.Count
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="@Url.Action("Edit", "Categories", new { id = category.Id })" class="btn btn-sm btn-admin-success me-1" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="@Url.Action("Delete", "Categories", new { id = category.Id })" class="btn btn-sm btn-admin-danger" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-tags display-1 text-muted mb-3"></i>
+                <h3 class="text-muted">No categories found</h3>
+                <p class="text-muted">Click the "Add Category" button to create your first category.</p>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Mark active menu item
+            $('.sidebar-subitem a[href="@Url.Action("Admin", "Categories")"]').addClass('active');
+            $('#categoriesSubmenu').addClass('show');
+            $('.sidebar-item a[href="#categoriesSubmenu"]').attr('aria-expanded', 'true');
+        });
+    </script>
+} 

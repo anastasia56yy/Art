@@ -1,0 +1,48 @@
+﻿@model ArtTicket.Domain.Models.EventCategory
+@{
+    ViewBag.Title = "Редактирование категории - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h2>Редактирование категории</h2>
+    </div>
+    <div class="admin-card-body">
+        @using (Html.BeginForm("Edit", "Categories", FormMethod.Post, new { @class = "admin-form needs-validation" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.Id)
+
+            <div class="mb-4">
+                <label for="Name" class="form-label">Название категории</label>
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", required = "required" })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-4">
+                <label for="Description" class="form-label">Описание</label>
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", rows = "5" })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="@Url.Action("Admin", "Categories")" class="btn btn-admin-secondary">
+                    <i class="bi bi-arrow-left"></i> Отмена
+                </a>
+                <button type="submit" class="btn btn-admin">
+                    <i class="bi bi-check2-circle"></i> Сохранить
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Пометить активный пункт меню
+            $('.sidebar-item a[href="@Url.Action("Admin", "Categories")"]').parent().addClass('active');
+        });
+    </script>
+} 

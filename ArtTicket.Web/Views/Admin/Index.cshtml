@@ -1,0 +1,206 @@
+@{
+    ViewBag.Title = "Dashboard - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    
+    var stats = ViewBag.DashboardStats as Dictionary<string, int>;
+    var recentEvents = ViewBag.RecentEvents as List<ArtTicket.Domain.Models.Event>;
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h2>Dashboard</h2>
+            </div>
+            <div class="admin-card-body">
+                <p class="lead">Welcome to ArtTicket Moldova administration panel</p>
+                <p>Use the sidebar to navigate to different sections of the admin area.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4 mb-4">
+        <div class="card bg-primary text-white h-100">
+            <div class="card-body py-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase mb-0">Total Events</h6>
+                        <h2 class="display-4">@stats["EventsCount"]</h2>
+                    </div>
+                    <i class="bi bi-calendar-event display-4 opacity-50"></i>
+                </div>
+            </div>
+            <div class="card-footer d-flex">
+                <a href="@Url.Action("Admin", "Events")" class="text-white text-decoration-none">View details
+                    <i class="bi bi-chevron-right small ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card bg-success text-white h-100">
+            <div class="card-body py-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase mb-0">Venues</h6>
+                        <h2 class="display-4">@stats["VenuesCount"]</h2>
+                    </div>
+                    <i class="bi bi-geo-alt display-4 opacity-50"></i>
+                </div>
+            </div>
+            <div class="card-footer d-flex">
+                <a href="@Url.Action("Admin", "Venues")" class="text-white text-decoration-none">View details
+                    <i class="bi bi-chevron-right small ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card bg-info text-white h-100">
+            <div class="card-body py-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase mb-0">Categories</h6>
+                        <h2 class="display-4">@stats["CategoriesCount"]</h2>
+                    </div>
+                    <i class="bi bi-tags display-4 opacity-50"></i>
+                </div>
+            </div>
+            <div class="card-footer d-flex">
+                <a href="@Url.Action("Admin", "Categories")" class="text-white text-decoration-none">View details
+                    <i class="bi bi-chevron-right small ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4 mb-4">
+        <div class="card bg-success text-white h-100">
+            <div class="card-body py-3">
+                <h6 class="text-uppercase mb-2">Upcoming Events</h6>
+                <h2 class="display-5">@stats["UpcomingEventsCount"]</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card bg-primary text-white h-100">
+            <div class="card-body py-3">
+                <h6 class="text-uppercase mb-2">Ongoing Events</h6>
+                <h2 class="display-5">@stats["OngoingEventsCount"]</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card bg-secondary text-white h-100">
+            <div class="card-body py-3">
+                <h6 class="text-uppercase mb-2">Past Events</h6>
+                <h2 class="display-5">@stats["PastEventsCount"]</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h2>Recent Events</h2>
+            </div>
+            <div class="admin-card-body">
+                @if (recentEvents != null && recentEvents.Count > 0)
+                {
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Venue</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var eventItem in recentEvents)
+                                {
+                                    <tr>
+                                        <td>
+                                            @eventItem.Title
+                                            @if (eventItem.IsFeatured)
+                                            {
+                                                <span class="badge bg-warning text-dark ms-1">Featured</span>
+                                            }
+                                        </td>
+                                        <td>@eventItem.Category.Name</td>
+                                        <td>@eventItem.Venue.Name</td>
+                                        <td>@eventItem.StartDate.ToString("MM/dd/yyyy HH:mm")</td>
+                                        <td>
+                                            @{
+                                                var now = DateTime.Now;
+                                                string statusClass;
+                                                string statusText;
+
+                                                if (now < eventItem.StartDate)
+                                                {
+                                                    statusClass = "bg-success";
+                                                    statusText = "Upcoming";
+                                                }
+                                                else if (now > eventItem.EndDate)
+                                                {
+                                                    statusClass = "bg-danger";
+                                                    statusText = "Past";
+                                                }
+                                                else
+                                                {
+                                                    statusClass = "bg-primary";
+                                                    statusText = "Ongoing";
+                                                }
+                                            }
+                                            <span class="badge @statusClass">@statusText</span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="@Url.Action("Details", "Events", new { id = eventItem.Id })" class="btn btn-sm btn-admin-secondary me-1" title="View">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <a href="@Url.Action("Edit", "Events", new { id = eventItem.Id })" class="btn btn-sm btn-admin-success me-1" title="Edit">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-5">
+                        <i class="bi bi-calendar-x display-1 text-muted mb-3"></i>
+                        <h3 class="text-muted">No events found</h3>
+                        <p class="text-muted">Add events to see them displayed here.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Mark Dashboard as active
+            $('.sidebar-item a[href="@Url.Action("Index", "Admin")"]').addClass('active');
+        });
+    </script>
+} 
