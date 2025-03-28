@@ -1,0 +1,82 @@
+﻿@{
+    ViewBag.Title = "Отмена заказа - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .cancel-header {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        padding: 40px 0;
+        margin-bottom: 40px;
+        color: white;
+        text-align: center;
+    }
+
+    .cancel-title {
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .cancel-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .processing-icon {
+        color: #a044ff;
+        font-size: 4rem;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .cancel-message {
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+    }
+
+    .btn-back {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+    }
+
+    .btn-back:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+</style>
+
+<section class="cancel-header">
+    <div class="container">
+        <h1 class="cancel-title">Отмена заказа</h1>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="cancel-card">
+                <div class="processing-icon text-center">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                
+                <div class="cancel-message text-center">
+                    <h3>Отмена заказа...</h3>
+                    <p>Пожалуйста, подождите, идет обработка запроса.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Автоматическое перенаправление на страницу заказов после небольшой задержки
+    $(document).ready(function() {
+        setTimeout(function() {
+            window.location.href = '@Url.Action("MyOrders", "Orders")';
+        }, 3000);
+    });
+</script> 

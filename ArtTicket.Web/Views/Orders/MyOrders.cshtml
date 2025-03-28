@@ -1,0 +1,384 @@
+﻿@model IEnumerable<ArtTicket.Domain.Models.Order>
+@{
+    ViewBag.Title = "Мои заказы - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .my-orders-header {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        padding: 40px 0;
+        margin-bottom: 40px;
+        color: white;
+        text-align: center;
+    }
+
+    .my-orders-title {
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .orders-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .order-item {
+        border: 1px solid #eee;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        overflow: hidden;
+        transition: all 0.3s;
+    }
+
+    .order-item:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .order-header {
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+    }
+
+    .order-id {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .order-date {
+        color: #666;
+        font-size: 0.95rem;
+    }
+
+    .order-status {
+        font-weight: 500;
+    }
+
+    .order-body {
+        padding: 20px;
+    }
+
+    .order-total {
+        font-weight: 600;
+        color: #333;
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+
+    .event-row {
+        display: flex;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px dashed #eee;
+    }
+
+    .event-row:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+
+    .event-image {
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-right: 15px;
+        flex-shrink: 0;
+    }
+
+    .event-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .event-details {
+        flex-grow: 1;
+    }
+
+    .event-title {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+        font-size: 1.05rem;
+    }
+
+    .event-info {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 5px;
+    }
+
+    .event-info i {
+        color: #6a3093;
+        width: 16px;
+        margin-right: 5px;
+        text-align: center;
+    }
+
+    .ticket-count {
+        background-color: #f0f0f0;
+        padding: 3px 10px;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        color: #333;
+        font-weight: 500;
+        display: inline-block;
+        margin-top: 5px;
+    }
+
+    .order-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+        border-top: 1px solid #eee;
+    }
+
+    .no-orders {
+        text-align: center;
+        padding: 50px 20px;
+        color: #666;
+    }
+
+    .no-orders i {
+        font-size: 3rem;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+
+    .btn-details {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+
+    .btn-details:hover {
+        background: linear-gradient(45deg, #5b2580, #8f35e3);
+        color: white;
+    }
+
+    .btn-cancel {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+
+    .btn-cancel:hover {
+        background-color: #c82333;
+        color: white;
+    }
+
+    .btn-back-to-events {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+    }
+
+    .btn-back-to-events:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+
+    .order-summary {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+
+    .summary-title {
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 1rem;
+    }
+
+    .summary-label {
+        color: #666;
+    }
+
+    .summary-value {
+        font-weight: 500;
+        color: #333;
+    }
+</style>
+
+<section class="my-orders-header">
+    <div class="container">
+        <h1 class="my-orders-title">Мои заказы</h1>
+        <p>История ваших заказов на мероприятия</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="orders-card">
+                <h2 class="card-title">История заказов</h2>
+                
+                @if (Model.Any())
+                {
+                    <div class="order-summary">
+                        <h3 class="summary-title">Сводная информация</h3>
+                        <div class="summary-row">
+                            <span class="summary-label">Всего заказов:</span>
+                            <span class="summary-value">@Model.Count()</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Ожидает оплаты:</span>
+                            <span class="summary-value">@Model.Count(o => o.Status == "Pending")</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Оплачено:</span>
+                            <span class="summary-value">@Model.Count(o => o.Status == "Paid")</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Отменено:</span>
+                            <span class="summary-value">@Model.Count(o => o.Status == "Cancelled")</span>
+                        </div>
+                        <hr>
+                        <div class="summary-row">
+                            <span class="summary-label">Общая сумма заказов:</span>
+                            <span class="summary-value">@Model.Where(o => o.Status != "Cancelled").Sum(o => o.TotalAmount).ToString("N0") MDL</span>
+                        </div>
+                    </div>
+                
+                    foreach (var order in Model)
+                    {
+                        <div class="order-item">
+                            <div class="order-header">
+                                <div>
+                                    <span class="order-id">Заказ #@order.Id</span>
+                                    <span class="order-date ms-3">от @order.OrderDate.ToString("dd.MM.yyyy HH:mm")</span>
+                                </div>
+                                <div class="order-status">
+                                    @switch(order.Status)
+                                    {
+                                        case "Pending":
+                                            <span class="badge bg-warning">Ожидает оплаты</span>
+                                            break;
+                                        case "Paid":
+                                            <span class="badge bg-success">Оплачен</span>
+                                            break;
+                                        case "Cancelled":
+                                            <span class="badge bg-danger">Отменен</span>
+                                            break;
+                                        default:
+                                            <span class="badge bg-secondary">@order.Status</span>
+                                            break;
+                                    }
+                                </div>
+                            </div>
+                            
+                            <div class="order-body">
+                                <div class="order-total">
+                                    <i class="fas fa-receipt me-2"></i> Сумма заказа: @order.TotalAmount.ToString("N0") MDL
+                                </div>
+                                
+                                @{
+                                    // Группировка билетов по мероприятиям
+                                    var ticketsByEvent = order.Tickets
+                                        .GroupBy(t => t.EventId)
+                                        .Select(g => new 
+                                        { 
+                                            Event = g.First().Event, 
+                                            TicketCount = g.Count(),
+                                            TotalPrice = g.Sum(t => t.Price)
+                                        })
+                                        .ToList();
+                                }
+                                
+                                @foreach (var item in ticketsByEvent)
+                                {
+                                    <div class="event-row">
+                                        <div class="event-image">
+                                            <img src="@(string.IsNullOrEmpty(item.Event.ImageUrl) ? "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7" : item.Event.ImageUrl)" alt="@item.Event.Title">
+                                        </div>
+                                        <div class="event-details">
+                                            <div class="event-title">@item.Event.Title</div>
+                                            <div class="event-info">
+                                                <i class="fas fa-calendar-alt"></i> @item.Event.StartDate.ToString("dd.MM.yyyy HH:mm")
+                                            </div>
+                                            <div class="event-info">
+                                                <i class="fas fa-map-marker-alt"></i> @item.Event.Venue.Name
+                                            </div>
+                                            <div class="ticket-count">
+                                                <i class="fas fa-ticket-alt me-1"></i> @item.TicketCount билетов × @((item.TotalPrice / item.TicketCount).ToString("N0")) MDL
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            
+                            <div class="order-footer">
+                                <div>
+                                    @if (order.Status == "Pending")
+                                    {
+                                        <a href="@Url.Action("Confirmation", "Orders", new { id = order.Id })" class="btn btn-sm btn-success me-2">
+                                            <i class="fas fa-credit-card me-1"></i> Оплатить
+                                        </a>
+                                    }
+                                </div>
+                                <div>
+                                    <a href="@Url.Action("Details", "Orders", new { id = order.Id })" class="btn btn-sm btn-details">
+                                        <i class="fas fa-eye me-1"></i> Подробнее
+                                    </a>
+                                    
+                                    @if (order.Status == "Pending")
+                                    {
+                                        <a href="@Url.Action("CancelConfirmed", "Orders", new { id = order.Id })" class="btn btn-sm btn-cancel ms-2">
+                                            <i class="fas fa-times me-1"></i> Отменить
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="no-orders">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h4>У вас пока нет заказов</h4>
+                        <p>Перейдите в афишу чтобы выбрать интересующее вас мероприятие</p>
+                    </div>
+                }
+                
+                <div class="d-flex justify-content-center mt-4">
+                    <a href="@Url.Action("Index", "Events")" class="btn btn-back-to-events">
+                        <i class="fas fa-calendar-alt me-2"></i> Перейти к афише
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

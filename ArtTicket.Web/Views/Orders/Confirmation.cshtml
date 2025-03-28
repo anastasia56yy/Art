@@ -1,0 +1,368 @@
+﻿@model ArtTicket.Domain.Models.Order
+@{
+    ViewBag.Title = "Заказ оформлен - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .confirmation-header {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        padding: 40px 0;
+        margin-bottom: 40px;
+        color: white;
+        text-align: center;
+    }
+
+    .confirmation-title {
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .confirmation-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .success-icon {
+        color: #28a745;
+        font-size: 4rem;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .confirmation-message {
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+    }
+
+    .order-details {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+    }
+
+    .order-details-title {
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .detail-row {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+    .detail-label {
+        font-weight: 500;
+        width: 200px;
+        color: #666;
+    }
+
+    .detail-value {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .ticket-card {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+
+    .ticket-title {
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .ticket-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+    }
+
+    .btn-continue {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        color: white;
+        border: none;
+        font-weight: 600;
+    }
+
+    .btn-continue:hover {
+        background: linear-gradient(45deg, #5b2580, #8f35e3);
+        color: white;
+    }
+</style>
+
+<section class="confirmation-header">
+    <div class="container">
+        <h1 class="confirmation-title">Заказ успешно оформлен</h1>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="confirmation-card">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                
+                <div class="text-center confirmation-message">
+                    <p>Ваш заказ успешно создан и ожидает оплаты.</p>
+                    <p>Номер заказа: <strong>@Model.Id</strong></p>
+                </div>
+                
+                <div class="order-details">
+                    <h3 class="order-details-title">Информация о заказе</h3>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Дата заказа:</span>
+                        <span class="detail-value">@Model.OrderDate.ToString("dd.MM.yyyy HH:mm")</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Статус заказа:</span>
+                        <span class="detail-value" id="orderStatus">
+                            @switch(Model.Status)
+                            {
+                                case "Pending":
+                                    <span class="badge bg-warning">Ожидает оплаты</span>
+                                    break;
+                                case "Paid":
+                                    <span class="badge bg-success">Оплачен</span>
+                                    break;
+                                case "Cancelled":
+                                    <span class="badge bg-danger">Отменен</span>
+                                    break;
+                                default:
+                                    <span class="badge bg-secondary">@Model.Status</span>
+                                    break;
+                            }
+                        </span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Сумма заказа:</span>
+                        <span class="detail-value">@Model.TotalAmount.ToString("N0") MDL</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Количество билетов:</span>
+                        <span class="detail-value">@Model.Tickets.Count</span>
+                    </div>
+                </div>
+                
+                <h3 class="order-details-title">Билеты</h3>
+                
+                @foreach (var ticket in Model.Tickets)
+                {
+                    <div class="ticket-card">
+                        <h4 class="ticket-title">@ticket.Event.Title</h4>
+                        
+                        <div class="ticket-info">
+                            <span>Дата и время:</span>
+                            <span>@ticket.Event.StartDate.ToString("dd.MM.yyyy HH:mm")</span>
+                        </div>
+                        
+                        <div class="ticket-info">
+                            <span>Место проведения:</span>
+                            <span>@ticket.Event.Venue.Name</span>
+                        </div>
+                        
+                        <div class="ticket-info">
+                            <span>Номер места:</span>
+                            <span>@ticket.SeatNumber</span>
+                        </div>
+                        
+                        <div class="ticket-info">
+                            <span>Цена:</span>
+                            <span>@ticket.Price.ToString("N0") MDL</span>
+                        </div>
+                    </div>
+                }
+                
+                <div class="alert alert-info my-4">
+                    <i class="fas fa-info-circle me-2"></i>
+                    После оплаты заказа вы получите электронные билеты на указанный вами email.
+                </div>
+
+                <div id="paymentResult" class="alert alert-success my-4" style="display:none;">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <span id="paymentResultMessage"></span>
+                </div>
+                
+                <div class="d-flex justify-content-center mt-4">
+                    <a href="@Url.Action("Index", "Events")" class="btn btn-outline-secondary me-3">
+                        <i class="fas fa-home me-2"></i> Вернуться к афише
+                    </a>
+                    @if (Model.Status == "Pending")
+                    {
+                        <button id="payButton" class="btn btn-success" onclick="startPayment()">
+                            <i class="fas fa-credit-card me-2"></i> Оплатить заказ
+                        </button>
+                    }
+                    else if (Model.Status == "Paid")
+                    {
+                        <button class="btn btn-success" disabled>
+                            <i class="fas fa-check-circle me-2"></i> Заказ оплачен
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+        function startPayment() {
+            // Имитируем переход на страницу MAIB
+            const payButton = document.getElementById('payButton');
+            payButton.disabled = true;
+            payButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Перенаправление на страницу оплаты...';
+            
+            // Имитация задержки перехода на страницу банка
+            setTimeout(function() {
+                showMockPaymentPage();
+            }, 1500);
+        }
+        
+        function showMockPaymentPage() {
+            // Создаем модальное окно, имитирующее страницу платежа MAIB
+            const modalHtml = `
+                <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title" id="paymentModalLabel">MAIB E-commerce Payment</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center mb-4">
+                                    <img src="https://maib.md/images/logo.svg" alt="MAIB Logo" height="50">
+                                </div>
+                                <h5 class="text-center mb-4">Оплата заказа #@Model.Id</h5>
+                                <div class="mb-3">
+                                    <label for="cardNumber" class="form-label">Номер карты</label>
+                                    <input type="text" class="form-control" id="cardNumber" value="4111 1111 1111 1111" readonly>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <label for="expireDate" class="form-label">Срок действия</label>
+                                        <input type="text" class="form-control" id="expireDate" value="12/25" readonly>
+                                    </div>
+                                    <div class="col">
+                                        <label for="cvv" class="form-label">CVV</label>
+                                        <input type="text" class="form-control" id="cvv" value="123" readonly>
+                                    </div>
+                                </div>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Это имитация платежа. Нажмите "Оплатить", чтобы продолжить.
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                <button type="button" class="btn btn-primary" id="confirmPaymentBtn">
+                                    Оплатить <span class="ms-2">@Model.TotalAmount.ToString("N0") MDL</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Добавляем модальное окно в DOM
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            // Инициализируем и показываем модальное окно
+            const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+            paymentModal.show();
+            
+            // Обработчик для кнопки подтверждения оплаты
+            document.getElementById('confirmPaymentBtn').addEventListener('click', function() {
+                this.disabled = true;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Обработка...';
+                
+                // Закрываем модальное окно через 2 секунды
+                setTimeout(function() {
+                    paymentModal.hide();
+                    // Удаляем модальное окно из DOM после закрытия
+                    document.getElementById('paymentModal').addEventListener('hidden.bs.modal', function() {
+                        this.remove();
+                        processPayment();
+                    });
+                }, 2000);
+            });
+            
+            // Сбрасываем состояние кнопки оплаты при закрытии модального окна
+            document.getElementById('paymentModal').addEventListener('hidden.bs.modal', function() {
+                const payButton = document.getElementById('payButton');
+                payButton.disabled = false;
+                payButton.innerHTML = '<i class="fas fa-credit-card me-2"></i> Оплатить заказ';
+            });
+        }
+        
+        function processPayment() {
+            // Отправляем AJAX-запрос для обновления статуса заказа в базе данных
+            $.ajax({
+                url: '@Url.Action("ProcessPayment", "Orders", new { id = Model.Id })',
+                type: 'POST',
+                success: function(data) {
+                    if (data.success) {
+                        // Обновляем статус заказа на странице
+                        document.getElementById('orderStatus').innerHTML = '<span class="badge bg-success">Оплачен</span>';
+                        
+                        // Показываем сообщение об успешной оплате
+                        const resultElement = document.getElementById('paymentResult');
+                        const messageElement = document.getElementById('paymentResultMessage');
+                        resultElement.style.display = 'block';
+                        messageElement.textContent = data.message;
+                        
+                        // Заменяем кнопку оплаты на неактивную кнопку "Заказ оплачен"
+                        const payButton = document.getElementById('payButton');
+                        payButton.outerHTML = '<button class="btn btn-success" disabled><i class="fas fa-check-circle me-2"></i> Заказ оплачен</button>';
+                        
+                        // Перенаправляем на страницу мероприятий через 5 секунд
+                        setTimeout(function() {
+                            window.location.href = '@Url.Action("Index", "Events")';
+                        }, 5000);
+                    } else {
+                        // Показываем сообщение об ошибке
+                        const resultElement = document.getElementById('paymentResult');
+                        const messageElement = document.getElementById('paymentResultMessage');
+                        resultElement.className = 'alert alert-danger my-4';
+                        resultElement.style.display = 'block';
+                        messageElement.textContent = data.message || 'Произошла ошибка при обработке платежа.';
+                        
+                        // Восстанавливаем кнопку оплаты
+                        const payButton = document.getElementById('payButton');
+                        payButton.disabled = false;
+                        payButton.innerHTML = '<i class="fas fa-credit-card me-2"></i> Повторить оплату';
+                    }
+                },
+                error: function(error) {
+                    console.error('Ошибка:', error);
+                    // Показываем сообщение об ошибке
+                    const resultElement = document.getElementById('paymentResult');
+                    const messageElement = document.getElementById('paymentResultMessage');
+                    resultElement.className = 'alert alert-danger my-4';
+                    resultElement.style.display = 'block';
+                    messageElement.textContent = 'Произошла техническая ошибка при обработке платежа. Пожалуйста, попробуйте позже.';
+                    
+                    // Восстанавливаем кнопку оплаты
+                    const payButton = document.getElementById('payButton');
+                    payButton.disabled = false;
+                    payButton.innerHTML = '<i class="fas fa-credit-card me-2"></i> Повторить оплату';
+                }
+            });
+        }
+    </script>
+} 

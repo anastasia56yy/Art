@@ -1,0 +1,402 @@
+﻿@model ArtTicket.Web.Controllers.OrderViewModel
+@{
+    ViewBag.Title = "Заказ билетов - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .order-header {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        padding: 40px 0;
+        margin-bottom: 40px;
+        color: white;
+        text-align: center;
+    }
+
+    .order-title {
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .order-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .event-info {
+        display: flex;
+        margin-bottom: 30px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+    .event-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 10px;
+        overflow: hidden;
+        flex-shrink: 0;
+        margin-right: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .event-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .event-details h4 {
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #333;
+        font-size: 1.3rem;
+    }
+
+    .event-meta {
+        color: #666;
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+
+    .event-meta i {
+        margin-right: 5px;
+        color: #6a3093;
+        width: 18px;
+        text-align: center;
+    }
+
+    .event-meta span {
+        margin-right: 15px;
+        display: inline-block;
+        margin-bottom: 8px;
+    }
+
+    .ticket-price {
+        font-weight: 600;
+        color: #333;
+        font-size: 1.1rem;
+        background-color: #e9f5ff;
+        padding: 8px 15px;
+        border-radius: 5px;
+        display: inline-block;
+    }
+
+    .ticket-price i {
+        color: #0d6efd;
+        margin-right: 8px;
+    }
+
+    .form-section {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+    }
+
+    .form-section-title {
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #444;
+    }
+
+    .total-section {
+        background-color: #f0f5ff;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 25px 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 1.05rem;
+    }
+
+    .total-label {
+        font-weight: 500;
+    }
+
+    .total-value {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .grand-total {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #6a3093;
+    }
+
+    .btn-back {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+    }
+
+    .btn-back:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+
+    .btn-order {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        color: white;
+        border: none;
+        font-weight: 600;
+        padding: 10px 25px;
+        box-shadow: 0 4px 15px rgba(106, 48, 147, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .btn-order:hover {
+        background: linear-gradient(45deg, #5b2580, #8f35e3);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(106, 48, 147, 0.35);
+    }
+
+    .form-control:focus {
+        border-color: #a044ff;
+        box-shadow: 0 0 0 0.25rem rgba(106, 48, 147, 0.25);
+    }
+
+    .ticket-counter {
+        display: flex;
+        align-items: center;
+        max-width: 200px;
+    }
+
+    .counter-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.2s;
+    }
+
+    .counter-btn:hover {
+        background-color: #e0e0e0;
+    }
+
+    .counter-input {
+        width: 60px;
+        height: 40px;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin: 0 10px;
+        font-weight: 600;
+    }
+
+    .payment-info {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 20px;
+        border-left: 4px solid #6a3093;
+    }
+
+    .payment-info h5 {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .payment-methods {
+        display: flex;
+        margin-top: 10px;
+    }
+
+    .payment-method {
+        width: 60px;
+        height: 40px;
+        background-color: white;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+    }
+
+    .payment-method img {
+        max-width: 80%;
+        max-height: 80%;
+    }
+</style>
+
+<section class="order-header">
+    <div class="container">
+        <h1 class="order-title">Заказ билетов</h1>
+        <p>Заполните форму ниже для оформления заказа</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "needs-validation" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.EventId)
+
+                <div class="order-card">
+                    <h2 class="card-title">Информация о мероприятии</h2>
+                    
+                    <div class="event-info">
+                        <div class="event-image">
+                            <img src="@(string.IsNullOrEmpty(Model.Event.ImageUrl) ? "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7" : Model.Event.ImageUrl)" alt="@Model.Event.Title">
+                        </div>
+                        <div class="event-details">
+                            <h4>@Model.Event.Title</h4>
+                            <div class="event-meta">
+                                <div>
+                                    <span><i class="fas fa-calendar-alt"></i> @Model.Event.StartDate.ToString("dd.MM.yyyy")</span>
+                                    <span><i class="fas fa-clock"></i> @Model.Event.StartDate.ToString("HH:mm")</span>
+                                </div>
+                                <div>
+                                    <span><i class="fas fa-map-marker-alt"></i> @Model.Event.Venue.Name</span>
+                                    <span><i class="fas fa-tag"></i> @Model.Event.Category.Name</span>
+                                </div>
+                            </div>
+                            <div class="ticket-price">
+                                <i class="fas fa-money-bill-wave"></i> @Model.Event.Price.ToString("N0") MDL за билет
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section mt-4">
+                        <h4 class="form-section-title">Выберите количество билетов</h4>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="ticket-counter">
+                                <div class="counter-btn" id="decreaseBtn"><i class="fas fa-minus"></i></div>
+                                <input type="number" class="counter-input" id="TicketCount" name="TicketCount" min="1" max="10" value="@Model.TicketCount" required>
+                                <div class="counter-btn" id="increaseBtn"><i class="fas fa-plus"></i></div>
+                            </div>
+                            <div class="form-text">Максимум 10 билетов в одном заказе</div>
+                        </div>
+                    </div>
+
+                    <div class="total-section">
+                        <div class="total-row">
+                            <span class="total-label">Цена билета:</span>
+                            <span class="total-value">@Model.Event.Price.ToString("N0") MDL</span>
+                        </div>
+                        <div class="total-row">
+                            <span class="total-label">Количество:</span>
+                            <span class="total-value"><span id="ticketCountDisplay">@Model.TicketCount</span> шт.</span>
+                        </div>
+                        <hr>
+                        <div class="total-row">
+                            <span class="total-label grand-total">Итого к оплате:</span>
+                            <span class="total-value grand-total"><span id="totalAmountDisplay">@((Model.Event.Price * Model.TicketCount).ToString("N0"))</span> MDL</span>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-info">
+                        <h5><i class="fas fa-info-circle me-2"></i> Информация об оплате</h5>
+                        <p class="mb-2">После оформления заказа вы будете перенаправлены на защищенную страницу MAIB для оплаты.</p>
+                        <div class="payment-methods">
+                            <div class="payment-method"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/800px-Mastercard-logo.svg.png" alt="MasterCard"></div>
+                            <div class="payment-method"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Visa.svg/2560px-Visa.svg.png" alt="Visa"></div>
+                            <div class="payment-method"><img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Old_Visa_Logo.svg" alt="Visa Electron"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="@Url.Action("Details", "Events", new { id = Model.Event.Id })" class="btn btn-back">
+                            <i class="fas fa-arrow-left me-2"></i> Назад к мероприятию
+                        </a>
+                        <button type="submit" class="btn btn-order">
+                            <i class="fas fa-shopping-cart me-2"></i> Оформить заказ
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ticketCountInput = document.getElementById('TicketCount');
+            const ticketCountDisplay = document.getElementById('ticketCountDisplay');
+            const totalAmountDisplay = document.getElementById('totalAmountDisplay');
+            const decreaseBtn = document.getElementById('decreaseBtn');
+            const increaseBtn = document.getElementById('increaseBtn');
+            const ticketPrice = @Model.Event.Price;
+            
+            // Обновление итоговой суммы
+            function updateTotal() {
+                const count = parseInt(ticketCountInput.value) || 0;
+                ticketCountDisplay.textContent = count;
+                
+                // Форматирование с разделителями тысяч
+                const total = ticketPrice * count;
+                totalAmountDisplay.textContent = total.toLocaleString('ru-RU');
+            }
+            
+            // Кнопки увеличения/уменьшения количества
+            decreaseBtn.addEventListener('click', function() {
+                let count = parseInt(ticketCountInput.value) || 0;
+                if (count > 1) {
+                    ticketCountInput.value = --count;
+                    updateTotal();
+                }
+            });
+            
+            increaseBtn.addEventListener('click', function() {
+                let count = parseInt(ticketCountInput.value) || 0;
+                if (count < 10) {
+                    ticketCountInput.value = ++count;
+                    updateTotal();
+                }
+            });
+            
+            // Обновление при ручном вводе
+            ticketCountInput.addEventListener('input', function() {
+                let count = parseInt(this.value) || 0;
+                
+                // Ограничение значения
+                if (count < 1) this.value = count = 1;
+                if (count > 10) this.value = count = 10;
+                
+                updateTotal();
+            });
+            
+            // Валидация формы
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            });
+        });
+    </script>
+} 

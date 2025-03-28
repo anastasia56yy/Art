@@ -1,0 +1,254 @@
+﻿@model ArtTicket.Domain.Models.Order
+@{
+    ViewBag.Title = "Детали заказа #" + Model.Id + " - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .details-header {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        padding: 40px 0;
+        margin-bottom: 40px;
+        color: white;
+        text-align: center;
+    }
+
+    .details-title {
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .details-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .success-icon {
+        color: #28a745;
+        font-size: 4rem;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .order-details {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+    }
+
+    .order-details-title {
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .detail-row {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+    .detail-label {
+        font-weight: 500;
+        width: 200px;
+        color: #666;
+    }
+
+    .detail-value {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .ticket-card {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+
+    .ticket-title {
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .ticket-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+    }
+
+    .btn-back {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+    }
+
+    .btn-back:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+    
+    .btn-cancel {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+    }
+
+    .btn-cancel:hover {
+        background-color: #c82333;
+        color: white;
+    }
+    
+    .btn-pay {
+        background-color: #28a745;
+        color: white;
+        border: none;
+    }
+
+    .btn-pay:hover {
+        background-color: #218838;
+        color: white;
+    }
+</style>
+
+<section class="details-header">
+    <div class="container">
+        <h1 class="details-title">Детали заказа #@Model.Id</h1>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success mb-4">
+                    <i class="fas fa-check-circle me-2"></i>
+                    @TempData["Success"]
+                </div>
+            }
+            
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger mb-4">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    @TempData["Error"]
+                </div>
+            }
+            
+            <div class="details-card">
+                <div class="order-details">
+                    <h3 class="order-details-title">Информация о заказе</h3>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Дата заказа:</span>
+                        <span class="detail-value">@Model.OrderDate.ToString("dd.MM.yyyy HH:mm")</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Статус заказа:</span>
+                        <span class="detail-value">
+                            @switch(Model.Status)
+                            {
+                                case "Pending":
+                                    <span class="badge bg-warning">Ожидает оплаты</span>
+                                    break;
+                                case "Paid":
+                                    <span class="badge bg-success">Оплачен</span>
+                                    break;
+                                case "Cancelled":
+                                    <span class="badge bg-danger">Отменен</span>
+                                    break;
+                                default:
+                                    <span class="badge bg-secondary">@Model.Status</span>
+                                    break;
+                            }
+                        </span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Сумма заказа:</span>
+                        <span class="detail-value">@Model.TotalAmount.ToString("N0") MDL</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Количество билетов:</span>
+                        <span class="detail-value">@Model.Tickets.Count</span>
+                    </div>
+                </div>
+                
+                <h3 class="order-details-title">Билеты</h3>
+                
+                @foreach (var ticket in Model.Tickets)
+                {
+                    <div class="ticket-card">
+                        <h4 class="ticket-title">@ticket.Event.Title</h4>
+                        
+                        <div class="ticket-info">
+                            <span>Дата и время:</span>
+                            <span>@ticket.Event.StartDate.ToString("dd.MM.yyyy HH:mm")</span>
+                        </div>
+                        
+                        <div class="ticket-info">
+                            <span>Место проведения:</span>
+                            <span>@ticket.Event.Venue.Name</span>
+                        </div>
+                        
+                        <div class="ticket-info">
+                            <span>Номер места:</span>
+                            <span>@ticket.SeatNumber</span>
+                        </div>
+                        
+                        <div class="ticket-info">
+                            <span>Цена:</span>
+                            <span>@ticket.Price.ToString("N0") MDL</span>
+                        </div>
+                    </div>
+                }
+                
+                @if (Model.Status == "Paid")
+                {
+                    <div class="alert alert-success my-4">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Ваш заказ оплачен. Электронные билеты отправлены на ваш email.
+                    </div>
+                }
+                else if (Model.Status == "Pending")
+                {
+                    <div class="alert alert-info my-4">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Для завершения заказа, пожалуйста, произведите оплату.
+                    </div>
+                }
+                else if (Model.Status == "Cancelled")
+                {
+                    <div class="alert alert-secondary my-4">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Этот заказ был отменен.
+                    </div>
+                }
+                
+                <div class="d-flex justify-content-center mt-4">
+                    <a href="@Url.Action("MyOrders", "Orders")" class="btn btn-back me-3">
+                        <i class="fas fa-arrow-left me-2"></i> К списку заказов
+                    </a>
+                    
+                    @if (Model.Status == "Pending")
+                    {
+                        <a href="@Url.Action("Confirmation", "Orders", new { id = Model.Id })" class="btn btn-pay me-3">
+                            <i class="fas fa-credit-card me-2"></i> Оплатить
+                        </a>
+                        
+                        <a href="@Url.Action("CancelConfirmed", "Orders", new { id = Model.Id })" class="btn btn-cancel">
+                            <i class="fas fa-times me-2"></i> Отменить заказ
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

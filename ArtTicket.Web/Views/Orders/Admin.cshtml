@@ -1,0 +1,287 @@
+﻿@model IEnumerable<ArtTicket.Domain.Models.Order>
+@{
+    ViewBag.Title = "Управление заказами - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    body {
+        font-family: 'Montserrat', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .admin-header {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        padding: 30px 0;
+        margin-bottom: 40px;
+        color: white;
+    }
+
+    .admin-title {
+        font-weight: 700;
+        margin-bottom: 0;
+    }
+
+    .orders-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .card-title {
+        font-weight: 600;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .orders-count {
+        color: #666;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .table thead {
+        background-color: #f8f9fa;
+    }
+
+    .table th, .table td {
+        padding: 15px;
+        vertical-align: middle;
+    }
+
+    .order-id {
+        font-weight: 600;
+        color: #6a3093;
+    }
+
+    .badge-pending {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .badge-paid {
+        background-color: #28a745;
+    }
+
+    .badge-cancelled {
+        background-color: #dc3545;
+    }
+
+    .btn-action {
+        padding: 5px 10px;
+        margin-right: 5px;
+        font-size: 0.85rem;
+    }
+
+    .btn-view {
+        color: #6a3093;
+        border-color: #6a3093;
+    }
+
+    .btn-view:hover {
+        background-color: #6a3093;
+        color: white;
+    }
+
+    .btn-change-status {
+        color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-change-status:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .pagination {
+        justify-content: center;
+        margin-top: 30px;
+    }
+
+    .page-link {
+        color: #6a3093;
+    }
+
+    .page-item.active .page-link {
+        background-color: #6a3093;
+        border-color: #6a3093;
+    }
+
+    .search-form {
+        margin-bottom: 20px;
+    }
+
+    .search-input {
+        border-radius: 30px;
+        padding-left: 20px;
+        background-color: #f8f9fa;
+        border: 1px solid #eee;
+    }
+
+    .search-button {
+        border-radius: 30px;
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        border: none;
+        color: white;
+    }
+
+    .search-button:hover {
+        background: linear-gradient(45deg, #5b2580, #8f35e3);
+        color: white;
+    }
+</style>
+
+<!-- Заголовок администратора -->
+<section class="admin-header">
+    <div class="container">
+        <h1 class="admin-title">Управление заказами</h1>
+    </div>
+</section>
+
+<div class="container">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="orders-card">
+        <div class="card-title">
+            <h3>Список заказов</h3>
+            <span class="orders-count">Всего заказов: @Model.Count()</span>
+        </div>
+
+        <div class="search-form">
+            <div class="row">
+                <div class="col-md-6">
+                    <form method="get" class="d-flex">
+                        <input type="text" name="searchTerm" class="form-control search-input me-2" placeholder="Поиск по номеру заказа или имени клиента">
+                        <button type="submit" class="btn search-button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-md-end">
+                        <div class="btn-group me-2">
+                            <a href="?status=all" class="btn @(Request.QueryString["status"] == "all" || Request.QueryString["status"] == null ? "btn-primary" : "btn-outline-primary")">Все</a>
+                            <a href="?status=pending" class="btn @(Request.QueryString["status"] == "pending" ? "btn-primary" : "btn-outline-primary")">Ожидающие</a>
+                            <a href="?status=paid" class="btn @(Request.QueryString["status"] == "paid" ? "btn-primary" : "btn-outline-primary")">Оплаченные</a>
+                            <a href="?status=cancelled" class="btn @(Request.QueryString["status"] == "cancelled" ? "btn-primary" : "btn-outline-primary")">Отмененные</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>№ заказа</th>
+                        <th>Дата</th>
+                        <th>Клиент</th>
+                        <th>Мероприятие</th>
+                        <th>Билеты</th>
+                        <th>Сумма</th>
+                        <th>Статус</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        foreach (var order in Model)
+                        {
+                            <tr>
+                                <td><span class="order-id">#@order.Id</span></td>
+                                <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                <td>@order.User.FirstName @order.User.LastName</td>
+                                <td>
+                                    @if (order.Tickets != null && order.Tickets.Any())
+                                    {
+                                        @order.Tickets.First().Event.Title
+                                    }
+                                </td>
+                                <td>@order.Tickets.Count</td>
+                                <td>@order.TotalAmount.ToString("N0") MDL</td>
+                                <td>
+                                    @switch(order.Status)
+                                    {
+                                        case "Pending":
+                                            <span class="badge badge-pending">Ожидает оплаты</span>
+                                            break;
+                                        case "Paid":
+                                            <span class="badge badge-paid">Оплачен</span>
+                                            break;
+                                        case "Cancelled":
+                                            <span class="badge badge-cancelled">Отменен</span>
+                                            break;
+                                        default:
+                                            <span class="badge bg-secondary">@order.Status</span>
+                                            break;
+                                    }
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Details", "Orders", new { id = order.Id })" class="btn btn-sm btn-outline-primary btn-action btn-view">
+                                        <i class="fas fa-eye"></i> Просмотр
+                                    </a>
+                                    <a href="@Url.Action("ChangeStatus", "Orders", new { id = order.Id })" class="btn btn-sm btn-outline-primary btn-action btn-change-status">
+                                        <i class="fas fa-exchange-alt"></i> Статус
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center py-4">
+                                Заказы не найдены
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <nav>
+            <ul class="pagination">
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Скрипт для автоматического скрытия сообщений об успехе
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(function(alert) {
+                    var bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 5000);
+        });
+    </script>
+} 
