@@ -1,0 +1,193 @@
+﻿@model List<ArtTicket.Domain.Models.Review>
+@{
+    ViewBag.Title = "Мои отзывы - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .reviews-header {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        padding: 40px 0;
+        margin-bottom: 40px;
+        color: white;
+        text-align: center;
+    }
+
+    .reviews-title {
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .reviews-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .review-card {
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        transition: all 0.3s;
+    }
+
+    .review-card:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .review-header {
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .review-title {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .review-date {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .review-body {
+        padding: 20px;
+    }
+
+    .star-rating {
+        color: #ffc107;
+        margin-bottom: 15px;
+    }
+
+    .review-comment {
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .btn-details, .btn-edit, .btn-delete {
+        color: white;
+        border: none;
+    }
+
+    .btn-details {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+    }
+
+    .btn-details:hover {
+        background: linear-gradient(45deg, #5b2580, #8f35e3);
+        color: white;
+    }
+
+    .btn-edit {
+        background: linear-gradient(45deg, #2193b0, #6dd5ed);
+    }
+
+    .btn-edit:hover {
+        background: linear-gradient(45deg, #1c839e, #61c0d6);
+        color: white;
+    }
+
+    .btn-delete {
+        background: linear-gradient(45deg, #cb2d3e, #ef473a);
+    }
+
+    .btn-delete:hover {
+        background: linear-gradient(45deg, #b82835, #d64033);
+        color: white;
+    }
+
+    .empty-message {
+        text-align: center;
+        padding: 30px;
+        color: #6c757d;
+    }
+
+    .empty-message i {
+        font-size: 3rem;
+        color: #e9ecef;
+        margin-bottom: 15px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* Обеспечиваем отступ до футера */
+    .container {
+        margin-bottom: 50px;
+    }
+</style>
+
+<section class="reviews-header">
+    <div class="container">
+        <h1 class="reviews-title">Мои отзывы</h1>
+        <p>Список всех отзывов, которые вы оставили о мероприятиях</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="reviews-card">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var review in Model)
+            {
+                <div class="review-card">
+                    <div class="review-header">
+                        <div>
+                            <h5 class="review-title">@review.Event.Title</h5>
+                            <div class="review-date">
+                                <i class="fas fa-calendar-alt me-1"></i> @review.CreatedDate.ToString("dd.MM.yyyy")
+                            </div>
+                        </div>
+                        <div class="star-rating">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <i class="fas @(i <= review.Rating ? "fa-star" : "fa-star-o")"></i>
+                            }
+                        </div>
+                    </div>
+                    <div class="review-body">
+                        <p class="review-comment">@review.Comment</p>
+                        <div class="action-buttons">
+                            <a href="@Url.Action("Details", "Events", new { id = review.EventId })" class="btn btn-sm btn-details">
+                                <i class="fas fa-external-link-alt me-1"></i> Перейти к мероприятию
+                            </a>
+                            <a href="@Url.Action("Edit", "Reviews", new { id = review.Id })" class="btn btn-sm btn-edit">
+                                <i class="fas fa-edit me-1"></i> Редактировать
+                            </a>
+                            <a href="@Url.Action("Delete", "Reviews", new { id = review.Id })" class="btn btn-sm btn-delete">
+                                <i class="fas fa-trash-alt me-1"></i> Удалить
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+            
+            <div class="text-center mt-4">
+                <a href="@Url.Action("Profile", "Account")" class="btn btn-details">
+                    <i class="fas fa-user me-2"></i> Вернуться в профиль
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="empty-message">
+                <i class="fas fa-comment-alt d-block"></i>
+                <h4>У вас пока нет отзывов</h4>
+                <p>Посетите мероприятие и оставьте свой отзыв</p>
+                <a href="@Url.Action("Index", "Events")" class="btn btn-details mt-3">
+                    <i class="fas fa-calendar-alt me-2"></i> Перейти к афише
+                </a>
+            </div>
+        }
+    </div>
+</div> 

@@ -1,0 +1,241 @@
+﻿@model ArtTicket.Web.Controllers.ReviewViewModel
+@{
+    ViewBag.Title = "Оставить отзыв - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .review-header {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        padding: 40px 0;
+        margin-bottom: 40px;
+        color: white;
+        text-align: center;
+    }
+
+    .review-title {
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .review-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .event-info {
+        display: flex;
+        margin-bottom: 30px;
+    }
+
+    .event-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 10px;
+        overflow: hidden;
+        flex-shrink: 0;
+        margin-right: 20px;
+    }
+
+    .event-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .event-details h4 {
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .event-meta {
+        color: #666;
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+    }
+
+    .event-meta i {
+        margin-right: 5px;
+        color: #6a3093;
+    }
+
+    .event-meta span {
+        margin-right: 15px;
+    }
+
+    .rating-group {
+        margin-bottom: 20px;
+    }
+
+    .rating-title {
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+
+    .rating-stars {
+        display: flex;
+        margin-bottom: 5px;
+    }
+
+    .rating-stars label {
+        cursor: pointer;
+        font-size: 2rem;
+        color: #ddd;
+        margin-right: 10px;
+        transition: color 0.3s;
+    }
+
+    .rating-stars label.selected,
+    .rating-stars label:hover,
+    .rating-stars label:hover ~ label {
+        color: #ffba08;
+    }
+
+    .rating-stars input[type="radio"] {
+        display: none;
+    }
+
+    .rating-text {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .btn-back {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+    }
+
+    .btn-back:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+
+    .btn-submit {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        color: white;
+        border: none;
+        font-weight: 600;
+    }
+
+    .btn-submit:hover {
+        background: linear-gradient(45deg, #5b2580, #8f35e3);
+        color: white;
+    }
+</style>
+
+<section class="review-header">
+    <div class="container">
+        <h1 class="review-title">Оставить отзыв</h1>
+        <p>Поделитесь своими впечатлениями о мероприятии</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "needs-validation" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.EventId)
+
+                <div class="review-card">
+                    <h2 class="card-title">Информация о мероприятии</h2>
+                    
+                    <div class="event-info">
+                        <div class="event-image">
+                            <img src="@(string.IsNullOrEmpty(Model.Event.ImageUrl) ? "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7" : Model.Event.ImageUrl)" alt="@Model.Event.Title">
+                        </div>
+                        <div class="event-details">
+                            <h4>@Model.Event.Title</h4>
+                            <div class="event-meta">
+                                <span><i class="fas fa-calendar-alt"></i> @Model.Event.StartDate.ToString("dd.MM.yyyy HH:mm")</span>
+                                <span><i class="fas fa-map-marker-alt"></i> @Model.Event.Venue.Name</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group rating-group">
+                        <h4 class="rating-title">Оцените мероприятие</h4>
+                        <div class="rating-stars">
+                            @for (int i = 5; i >= 1; i--)
+                            {
+                                <input type="radio" name="Rating" id="rating-@i" value="@i" @(Model.Rating == i ? "checked" : "") />
+                                <label for="rating-@i" class="star-icon @(Model.Rating >= i ? "selected" : "")">
+                                    <i class="fas fa-star"></i>
+                                </label>
+                            }
+                        </div>
+                        <div class="rating-text">Выберите количество звезд, соответствующее вашей оценке</div>
+                        @Html.ValidationMessageFor(model => model.Rating, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="Comment" class="form-label">Ваш отзыв</label>
+                        @Html.TextAreaFor(model => model.Comment, new { @class = "form-control", rows = "5", placeholder = "Поделитесь вашими впечатлениями о мероприятии...", required = "required" })
+                        @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="@Url.Action("Details", "Events", new { id = Model.Event.Id })" class="btn btn-back">
+                            <i class="fas fa-arrow-left me-2"></i> Назад к мероприятию
+                        </a>
+                        <button type="submit" class="btn btn-submit">
+                            <i class="fas fa-paper-plane me-2"></i> Отправить отзыв
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ratingLabels = document.querySelectorAll('.star-icon');
+            const ratingInputs = document.querySelectorAll('input[name="Rating"]');
+            
+            // Обработка клика на звезду
+            ratingLabels.forEach(label => {
+                label.addEventListener('click', function() {
+                    const ratingValue = this.getAttribute('for').split('-')[1];
+                    
+                    // Сброс всех выделений
+                    ratingLabels.forEach(l => l.classList.remove('selected'));
+                    
+                    // Выделение звезд до выбранной
+                    ratingLabels.forEach(l => {
+                        const labelValue = l.getAttribute('for').split('-')[1];
+                        if (labelValue <= ratingValue) {
+                            l.classList.add('selected');
+                        }
+                    });
+                });
+            });
+            
+            // Валидация формы
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            });
+        });
+    </script>
+} 

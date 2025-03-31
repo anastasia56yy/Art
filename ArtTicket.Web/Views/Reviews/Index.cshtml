@@ -1,0 +1,392 @@
+﻿@model IEnumerable<ArtTicket.Domain.Models.Review>
+@{
+    ViewBag.Title = "Отзывы - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var eventItem = ViewBag.Event as ArtTicket.Domain.Models.Event;
+}
+
+<style>
+    .reviews-header {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        padding: 40px 0;
+        margin-bottom: 40px;
+        color: white;
+        text-align: center;
+    }
+
+    .reviews-title {
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .reviews-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .event-info {
+        display: flex;
+        margin-bottom: 30px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+    .event-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 10px;
+        overflow: hidden;
+        flex-shrink: 0;
+        margin-right: 20px;
+    }
+
+    .event-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .event-details h4 {
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .event-meta {
+        color: #666;
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+    }
+
+    .event-meta i {
+        margin-right: 5px;
+        color: #6a3093;
+    }
+
+    .event-meta span {
+        margin-right: 15px;
+    }
+
+    .review-item {
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #eee;
+        transition: all 0.3s;
+    }
+
+    .review-item:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .reviewer-info {
+        display: flex;
+        align-items: center;
+    }
+
+    .reviewer-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 1.5rem;
+        color: #6a3093;
+    }
+
+    .reviewer-name {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .review-date {
+        color: #888;
+        font-size: 0.9rem;
+    }
+
+    .review-rating {
+        display: flex;
+        align-items: center;
+    }
+
+    .star-filled {
+        color: #FFD700;
+        margin-right: 2px;
+    }
+
+    .review-content {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #444;
+    }
+
+    .rating-summary {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+
+    .average-rating {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .average-score {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #333;
+        margin-right: 15px;
+    }
+
+    .average-stars {
+        font-size: 1.5rem;
+    }
+
+    .rating-count {
+        color: #666;
+        margin-left: 10px;
+    }
+
+    .rating-chart {
+        margin-top: 15px;
+    }
+
+    .rating-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+
+    .rating-label {
+        width: 40px;
+        text-align: right;
+        margin-right: 10px;
+        font-weight: 500;
+    }
+
+    .rating-bar-container {
+        flex-grow: 1;
+        height: 8px;
+        background-color: #e9ecef;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .rating-bar {
+        height: 100%;
+        background-color: #6a3093;
+        border-radius: 4px;
+    }
+
+    .rating-percentage {
+        width: 40px;
+        text-align: left;
+        margin-left: 10px;
+        color: #666;
+    }
+
+    .no-reviews {
+        text-align: center;
+        padding: 40px 20px;
+        color: #666;
+    }
+
+    .no-reviews i {
+        font-size: 3rem;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+
+    .btn-add-review {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        color: white;
+        border: none;
+        font-weight: 600;
+    }
+
+    .btn-add-review:hover {
+        background: linear-gradient(45deg, #5b2580, #8f35e3);
+        color: white;
+    }
+
+    .btn-back {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+    }
+
+    .btn-back:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+</style>
+
+<section class="reviews-header">
+    <div class="container">
+        <h1 class="reviews-title">Отзывы о мероприятии</h1>
+        <p>@eventItem.Title</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="reviews-card">
+                <h2 class="card-title">Информация о мероприятии</h2>
+                
+                <div class="event-info">
+                    <div class="event-image">
+                        <img src="@(string.IsNullOrEmpty(eventItem.ImageUrl) ? "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7" : eventItem.ImageUrl)" alt="@eventItem.Title">
+                    </div>
+                    <div class="event-details">
+                        <h4>@eventItem.Title</h4>
+                        <div class="event-meta">
+                            <div>
+                                <span><i class="fas fa-calendar-alt"></i> @eventItem.StartDate.ToString("dd.MM.yyyy")</span>
+                                <span><i class="fas fa-clock"></i> @eventItem.StartDate.ToString("HH:mm")</span>
+                            </div>
+                            <div>
+                                <span><i class="fas fa-map-marker-alt"></i> @eventItem.Venue.Name</span>
+                                <span><i class="fas fa-tag"></i> @eventItem.Category.Name</span>
+                            </div>
+                        </div>
+                        <a href="@Url.Action("Details", "Events", new { id = eventItem.Id })" class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Вернуться к мероприятию
+                        </a>
+                    </div>
+                </div>
+                
+                @if (Model.Any())
+                {
+                    <div class="rating-summary">
+                        @{
+                            var averageRating = Model.Average(r => r.Rating);
+                            var reviewCount = Model.Count();
+                            
+                            // Подсчитываем количество отзывов для каждой оценки
+                            var ratingCounts = new int[6]; // Индексы от 1 до 5
+                            foreach (var review in Model)
+                            {
+                                ratingCounts[review.Rating]++;
+                            }
+                        }
+                        
+                        <div class="average-rating">
+                            <div class="average-score">@averageRating.ToString("0.0")</div>
+                            <div class="average-stars">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= Math.Floor(averageRating))
+                                    {
+                                        <i class="fas fa-star star-filled"></i>
+                                    }
+                                    else if (i - 0.5 <= averageRating)
+                                    {
+                                        <i class="fas fa-star-half-alt star-filled"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="far fa-star star-filled"></i>
+                                    }
+                                }
+                                <span class="rating-count">@reviewCount отзывов</span>
+                            </div>
+                        </div>
+                        
+                        <div class="rating-chart">
+                            @for (int i = 5; i >= 1; i--)
+                            {
+                                var percentage = reviewCount > 0 ? (double)ratingCounts[i] / reviewCount * 100 : 0;
+                                <div class="rating-row">
+                                    <div class="rating-label">@i <i class="fas fa-star star-filled" style="font-size: 0.8rem;"></i></div>
+                                    <div class="rating-bar-container">
+                                        <div class="rating-bar" style="width: @percentage%"></div>
+                                    </div>
+                                    <div class="rating-percentage">@percentage.ToString("0")%</div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <h3 class="mb-4">Отзывы посетителей</h3>
+                    
+                    foreach (var review in Model)
+                    {
+                        <div class="review-item">
+                            <div class="review-header">
+                                <div class="reviewer-info">
+                                    <div class="reviewer-avatar">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div>
+                                        <div class="reviewer-name">@review.User.FirstName</div>
+                                        <div class="review-date">@review.CreatedDate.ToString("dd.MM.yyyy HH:mm")</div>
+                                    </div>
+                                </div>
+                                <div class="review-rating">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= review.Rating)
+                                        {
+                                            <i class="fas fa-star star-filled"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="far fa-star star-filled"></i>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <div class="review-content">
+                                @review.Comment
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="no-reviews">
+                        <i class="far fa-comment-dots"></i>
+                        <h4>Отзывов пока нет</h4>
+                        <p>Будьте первым, кто оставит отзыв об этом мероприятии!</p>
+                    </div>
+                }
+                
+                <div class="d-flex justify-content-center mt-4">
+                    <a href="@Url.Action("Details", "Events", new { id = eventItem.Id })" class="btn btn-back me-3">
+                        <i class="fas fa-arrow-left me-2"></i> Назад к мероприятию
+                    </a>
+                    <a href="@Url.Action("Create", "Reviews", new { eventId = eventItem.Id })" class="btn btn-add-review">
+                        <i class="fas fa-plus me-2"></i> Добавить отзыв
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
