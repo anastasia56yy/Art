@@ -1,0 +1,107 @@
+﻿@model ArtTicket.Domain.Models.Venue
+@{
+    ViewBag.Title = "Создание площадки - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h2>Создание новой площадки</h2>
+    </div>
+    <div class="admin-card-body">
+        @using (Html.BeginForm("Create", "Venues", FormMethod.Post, new { @class = "admin-form needs-validation" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-4">
+                        <label for="Name" class="form-label">Название площадки</label>
+                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control", required = "required", placeholder = "Например: Национальный Дворец" })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label for="City" class="form-label">Город</label>
+                                @Html.TextBoxFor(model => model.City, new { @class = "form-control", required = "required", placeholder = "Например: Кишинёв" })
+                                @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label for="Capacity" class="form-label">Вместимость</label>
+                                @Html.TextBoxFor(model => model.Capacity, new { @class = "form-control", required = "required", type = "number", min = "1", placeholder = "Например: 1000" })
+                                @Html.ValidationMessageFor(model => model.Capacity, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="Address" class="form-label">Адрес</label>
+                        @Html.TextBoxFor(model => model.Address, new { @class = "form-control", required = "required", placeholder = "Например: ул. Штефан чел Маре, 1" })
+                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-4">
+                        <label for="ImageUrl" class="form-label">URL изображения</label>
+                        <div id="imagePreview" class="mb-2" style="width: 100%; height: 150px; background-color: #f8f9fa; border: 1px dashed #ddd; display: flex; justify-content: center; align-items: center; border-radius: 5px; overflow: hidden;">
+                            <span id="previewPlaceholder">Предпросмотр изображения</span>
+                        </div>
+                        @Html.TextBoxFor(model => model.ImageUrl, new { @class = "form-control", placeholder = "https://example.com/image.jpg" })
+                        @Html.ValidationMessageFor(model => model.ImageUrl, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="Description" class="form-label">Описание</label>
+                        @Html.TextAreaFor(model => model.Description, new { @class = "form-control", rows = "5", placeholder = "Краткое описание площадки..." })
+                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="@Url.Action("Admin", "Venues")" class="btn btn-admin-secondary">
+                    <i class="bi bi-arrow-left"></i> Отмена
+                </a>
+                <button type="submit" class="btn btn-admin">
+                    <i class="bi bi-check2-circle"></i> Сохранить
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Пометить активный пункт меню
+            $('.sidebar-item a[href="@Url.Action("Admin", "Venues")"]').parent().addClass('active');
+            
+            // Предпросмотр изображения
+            $('#ImageUrl').on('input', function() {
+                var url = $(this).val();
+                if (url) {
+                    $('#previewPlaceholder').hide();
+                    
+                    if ($('#previewImage').length) {
+                        $('#previewImage').attr('src', url);
+                    } else {
+                        var img = $('<img id="previewImage" src="' + url + '" style="max-width: 100%; max-height: 100%; object-fit: contain;">');
+                        $('#imagePreview').append(img);
+                        
+                        img.on('error', function() {
+                            $(this).remove();
+                            $('#previewPlaceholder').show();
+                        });
+                    }
+                } else {
+                    $('#previewImage').remove();
+                    $('#previewPlaceholder').show();
+                }
+            });
+        });
+    </script>
+} 

@@ -1,0 +1,89 @@
+﻿@model IEnumerable<ArtTicket.Domain.Models.Venue>
+@{
+    ViewBag.Title = "Venues Management - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h2>Venues</h2>
+    </div>
+    <div class="admin-card-body">
+        <div class="d-flex justify-content-end mb-4">
+            <a href="@Url.Action("Create", "Venues")" class="btn btn-admin">
+                <i class="bi bi-plus-circle"></i> Add Venue
+            </a>
+        </div>
+
+        @if (Model.Count() > 0)
+        {
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>Capacity</th>
+                            <th>Events Count</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var venue in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@(string.IsNullOrEmpty(venue.ImageUrl) ? "https://via.placeholder.com/80x50?text=No+Image" : venue.ImageUrl)" 
+                                         alt="@venue.Name" style="width: 80px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                </td>
+                                <td>@venue.Name</td>
+                                <td>@venue.City, @venue.Address</td>
+                                <td>@venue.Capacity people</td>
+                                <td>
+                                    @if (venue.Events != null)
+                                    {
+                                        @venue.Events.Count
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="@Url.Action("Edit", "Venues", new { id = venue.Id })" class="btn btn-sm btn-admin-success me-1" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="@Url.Action("Delete", "Venues", new { id = venue.Id })" class="btn btn-sm btn-admin-danger" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-geo-alt display-1 text-muted mb-3"></i>
+                <h3 class="text-muted">No venues found</h3>
+                <p class="text-muted">Click the "Add Venue" button to create your first venue.</p>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Mark active menu item
+            $('.sidebar-subitem a[href="@Url.Action("Admin", "Venues")"]').addClass('active');
+            $('#venuesSubmenu').addClass('show');
+            $('.sidebar-item a[href="#venuesSubmenu"]').attr('aria-expanded', 'true');
+        });
+    </script>
+} 

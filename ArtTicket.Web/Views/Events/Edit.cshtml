@@ -1,0 +1,335 @@
+﻿@model ArtTicket.Domain.Models.Event
+
+@{
+    ViewBag.Title = "Редактирование мероприятия - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    body {
+        font-family: 'Montserrat', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .admin-header {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        padding: 30px 0;
+        margin-bottom: 40px;
+        color: white;
+    }
+
+    .admin-title {
+        font-weight: 700;
+        margin-bottom: 0;
+    }
+
+    .form-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .form-section {
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #444;
+        margin-bottom: 8px;
+    }
+
+    .form-control, .form-select {
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #6a3093;
+        box-shadow: 0 0 0 0.2rem rgba(106, 48, 147, 0.25);
+    }
+
+    .checkbox-label {
+        margin-left: 8px;
+        user-select: none;
+    }
+
+    .validation-message {
+        color: #dc3545;
+        font-size: 0.85rem;
+        margin-top: 5px;
+    }
+
+    .btn-toolbar {
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .btn-back {
+        background-color: #6c757d;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: all 0.3s;
+    }
+
+    .btn-back:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+
+    .btn-save {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        border: none;
+        color: white;
+        padding: 10px 30px;
+        font-weight: 600;
+        border-radius: 5px;
+        transition: all 0.3s;
+    }
+
+    .btn-save:hover {
+        background: linear-gradient(45deg, #5b2580, #8f35e3);
+        color: white;
+    }
+
+    .image-preview {
+        width: 100%;
+        height: 200px;
+        background-color: #f8f9fa;
+        border: 1px dashed #ddd;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 15px;
+        overflow: hidden;
+    }
+
+    .image-preview img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .image-placeholder {
+        color: #aaa;
+        font-size: 1rem;
+    }
+
+    .required-field::after {
+        content: '*';
+        color: #dc3545;
+        margin-left: 4px;
+    }
+</style>
+
+<!-- Заголовок администратора -->
+<section class="admin-header">
+    <div class="container">
+        <h1 class="admin-title">Редактирование мероприятия</h1>
+    </div>
+</section>
+
+<div class="container">
+    <a href="@Url.Action("Admin", "Events")" class="btn btn-back mb-4">
+        <i class="fas fa-arrow-left"></i> Вернуться к списку
+    </a>
+
+    @using (Html.BeginForm("Edit", "Events", FormMethod.Post, new { @class = "needs-validation" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-card">
+            <div class="form-section">
+                <h3 class="section-title">Основная информация</h3>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label for="Title" class="form-label required-field">Название мероприятия</label>
+                            @Html.TextBoxFor(model => model.Title, new { @class = "form-control", required = "required" })
+                            <div class="validation-message"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Description" class="form-label required-field">Описание</label>
+                            @Html.TextAreaFor(model => model.Description, new { @class = "form-control", rows = "5", required = "required" })
+                            <div class="validation-message"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="ImageUrl" class="form-label">URL изображения</label>
+                            <div class="image-preview" id="imagePreviewContainer">
+                                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                                {
+                                    <img src="@Model.ImageUrl" alt="@Model.Title">
+                                }
+                                else
+                                {
+                                    <div class="image-placeholder">
+                                        <i class="fas fa-image fa-3x mb-2"></i>
+                                        <div>Предпросмотр изображения</div>
+                                    </div>
+                                }
+                            </div>
+                            @Html.TextBoxFor(model => model.ImageUrl, new { @class = "form-control", placeholder = "https://example.com/image.jpg" })
+                        </div>
+                        <div class="form-check mb-3">
+                            @Html.CheckBoxFor(model => model.IsFeatured, new { @class = "form-check-input" })
+                            <label class="checkbox-label" for="IsFeatured">
+                                Рекомендуемое мероприятие
+                            </label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Price" class="form-label required-field">Цена (MDL)</label>
+                            @Html.TextBoxFor(model => model.Price, "{0:F2}", new { @class = "form-control", type = "number", min = "0", step = "0.01", required = "required" })
+                            <div class="validation-message"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 class="section-title">Дата и место проведения</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="StartDate" class="form-label required-field">Дата начала</label>
+                            <input type="datetime-local" class="form-control" id="StartDate" name="StartDate" value="@Model.StartDate.ToString("yyyy-MM-ddTHH:mm")" required>
+                            <div class="validation-message"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="EndDate" class="form-label required-field">Дата окончания</label>
+                            <input type="datetime-local" class="form-control" id="EndDate" name="EndDate" value="@Model.EndDate.ToString("yyyy-MM-ddTHH:mm")" required>
+                            <div class="validation-message"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="VenueId" class="form-label required-field">Место проведения</label>
+                            @Html.DropDownList("VenueId", ViewBag.VenueId as SelectList, new { @class = "form-select", required = "required" })
+                            <div class="validation-message"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="CategoryId" class="form-label required-field">Категория</label>
+                            @Html.DropDownList("CategoryId", ViewBag.CategoryId as SelectList, new { @class = "form-select", required = "required" })
+                            <div class="validation-message"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-toolbar">
+                <a href="@Url.Action("Admin", "Events")" class="btn btn-back">
+                    Отмена
+                </a>
+                <button type="submit" class="btn btn-save">
+                    <i class="fas fa-save me-2"></i> Сохранить изменения
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Просмотр изображения
+        const imageUrlInput = document.getElementById('ImageUrl');
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+        const imagePlaceholder = imagePreviewContainer.querySelector('.image-placeholder');
+
+        imageUrlInput.addEventListener('input', function () {
+            const imageUrl = this.value.trim();
+            
+            if (imageUrl) {
+                // Если URL изображения введен, показываем превью
+                if (imagePreviewContainer.querySelector('img')) {
+                    imagePreviewContainer.querySelector('img').src = imageUrl;
+                } else {
+                    if (imagePlaceholder) {
+                        imagePlaceholder.style.display = 'none';
+                    }
+                    const imgElement = document.createElement('img');
+                    imgElement.src = imageUrl;
+                    imgElement.onerror = function() {
+                        imgElement.remove();
+                        if (imagePlaceholder) {
+                            imagePlaceholder.style.display = 'flex';
+                        } else {
+                            const newPlaceholder = document.createElement('div');
+                            newPlaceholder.className = 'image-placeholder';
+                            newPlaceholder.innerHTML = '<i class="fas fa-image fa-3x mb-2"></i><div>Предпросмотр изображения</div>';
+                            imagePreviewContainer.appendChild(newPlaceholder);
+                        }
+                    };
+                    imagePreviewContainer.appendChild(imgElement);
+                }
+            } else {
+                // Если URL изображения пуст, показываем плейсхолдер
+                if (imagePreviewContainer.querySelector('img')) {
+                    imagePreviewContainer.querySelector('img').remove();
+                }
+                if (imagePlaceholder) {
+                    imagePlaceholder.style.display = 'flex';
+                } else {
+                    const newPlaceholder = document.createElement('div');
+                    newPlaceholder.className = 'image-placeholder';
+                    newPlaceholder.innerHTML = '<i class="fas fa-image fa-3x mb-2"></i><div>Предпросмотр изображения</div>';
+                    imagePreviewContainer.appendChild(newPlaceholder);
+                }
+            }
+        });
+
+        // Проверка форм
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            form.classList.add('was-validated');
+        });
+
+        // Проверка дат
+        const startDateInput = document.getElementById('StartDate');
+        const endDateInput = document.getElementById('EndDate');
+
+        function validateDates() {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+
+            if (startDate > endDate) {
+                endDateInput.setCustomValidity('Дата окончания должна быть позже даты начала');
+                endDateInput.nextElementSibling.textContent = 'Дата окончания должна быть позже даты начала';
+            } else {
+                endDateInput.setCustomValidity('');
+                endDateInput.nextElementSibling.textContent = '';
+            }
+        }
+
+        startDateInput.addEventListener('change', validateDates);
+        endDateInput.addEventListener('change', validateDates);
+    });
+</script> 

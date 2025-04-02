@@ -1,0 +1,156 @@
+﻿@model ArtTicket.Domain.Models.Event
+
+@{
+    ViewBag.Title = "Удаление мероприятия - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    body {
+        font-family: 'Montserrat', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .admin-header {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        padding: 30px 0;
+        margin-bottom: 40px;
+        color: white;
+    }
+
+    .admin-title {
+        font-weight: 700;
+        margin-bottom: 0;
+    }
+
+    .delete-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .warning-icon {
+        color: #dc3545;
+        font-size: 4rem;
+        margin-bottom: 20px;
+    }
+
+    .event-info {
+        margin: 30px 0;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        border-left: 4px solid #6a3093;
+    }
+
+    .event-title {
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .event-details {
+        color: #666;
+        margin-bottom: 5px;
+    }
+
+    .event-details i {
+        width: 20px;
+        color: #6a3093;
+        margin-right: 10px;
+    }
+
+    .btn-toolbar {
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .btn-back {
+        background-color: #6c757d;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: all 0.3s;
+    }
+
+    .btn-back:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+        border: none;
+        color: white;
+        padding: 10px 30px;
+        font-weight: 600;
+        border-radius: 5px;
+        transition: all 0.3s;
+    }
+
+    .btn-delete:hover {
+        background-color: #c82333;
+        color: white;
+    }
+
+    .warning-text {
+        color: #dc3545;
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+</style>
+
+<!-- Заголовок администратора -->
+<section class="admin-header">
+    <div class="container">
+        <h1 class="admin-title">Удаление мероприятия</h1>
+    </div>
+</section>
+
+<div class="container">
+    <a href="@Url.Action("Admin", "Events")" class="btn btn-back mb-4">
+        <i class="fas fa-arrow-left"></i> Вернуться к списку
+    </a>
+
+    <div class="delete-card text-center">
+        <i class="fas fa-exclamation-triangle warning-icon"></i>
+        <h2>Подтверждение удаления</h2>
+        <p class="text-muted mb-4">Вы уверены, что хотите удалить следующее мероприятие?</p>
+
+        <div class="event-info text-start">
+            <h3 class="event-title">@Model.Title</h3>
+            <p class="event-details">
+                <i class="fas fa-calendar-alt"></i>
+                <span>@Model.StartDate.ToString("dd MMMM yyyy, HH:mm")</span>
+            </p>
+            <p class="event-details">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>@Model.Venue.Name</span>
+            </p>
+            <p class="event-details">
+                <i class="fas fa-tag"></i>
+                <span>@Model.Category.Name</span>
+            </p>
+        </div>
+
+        <p class="warning-text">Это действие нельзя отменить!</p>
+        <p class="text-muted">Удаление мероприятия также удалит все связанные с ним билеты и отзывы.</p>
+
+        @using (Html.BeginForm("Delete", "Events", new { id = Model.Id }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="btn-toolbar justify-content-center">
+                <a href="@Url.Action("Admin", "Events")" class="btn btn-back me-3">
+                    Отмена
+                </a>
+                <button type="submit" class="btn btn-delete">
+                    <i class="fas fa-trash me-2"></i> Удалить мероприятие
+                </button>
+            </div>
+        }
+    </div>
+</div> 

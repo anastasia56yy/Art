@@ -1,0 +1,114 @@
+﻿@model IEnumerable<ArtTicket.Domain.Models.Event>
+@{
+    ViewBag.Title = "Events Management - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h2>Events</h2>
+    </div>
+    <div class="admin-card-body">
+        <div class="d-flex justify-content-end mb-4">
+            <a href="@Url.Action("Create", "Events")" class="btn btn-admin">
+                <i class="bi bi-plus-circle"></i> Add Event
+            </a>
+        </div>
+
+        @if (Model.Count() > 0)
+        {
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Venue</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var eventItem in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@(string.IsNullOrEmpty(eventItem.ImageUrl) ? "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=80" : eventItem.ImageUrl)" 
+                                         alt="@eventItem.Title" style="width: 80px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                </td>
+                                <td>
+                                    @eventItem.Title
+                                    @if (eventItem.IsFeatured)
+                                    {
+                                        <span class="badge bg-warning text-dark ms-1">Featured</span>
+                                    }
+                                </td>
+                                <td>@eventItem.Category.Name</td>
+                                <td>@eventItem.Venue.Name</td>
+                                <td>@eventItem.StartDate.ToString("MM/dd/yyyy HH:mm")</td>
+                                <td>
+                                    @{
+                                        var now = DateTime.Now;
+                                        string statusClass;
+                                        string statusText;
+
+                                        if (now < eventItem.StartDate)
+                                        {
+                                            statusClass = "bg-success";
+                                            statusText = "Upcoming";
+                                        }
+                                        else if (now > eventItem.EndDate)
+                                        {
+                                            statusClass = "bg-danger";
+                                            statusText = "Past";
+                                        }
+                                        else
+                                        {
+                                            statusClass = "bg-primary";
+                                            statusText = "Ongoing";
+                                        }
+                                    }
+                                    <span class="badge @statusClass">@statusText</span>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="@Url.Action("Details", "Events", new { id = eventItem.Id })" class="btn btn-sm btn-admin-secondary me-1" title="View">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="@Url.Action("Edit", "Events", new { id = eventItem.Id })" class="btn btn-sm btn-admin-success me-1" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="@Url.Action("Delete", "Events", new { id = eventItem.Id })" class="btn btn-sm btn-admin-danger" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-calendar-x display-1 text-muted mb-3"></i>
+                <h3 class="text-muted">No events found</h3>
+                <p class="text-muted">Click the "Add Event" button to create your first event.</p>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Mark active menu item
+            $('.sidebar-subitem a[href="@Url.Action("Admin", "Events")"]').addClass('active');
+            $('#eventsSubmenu').addClass('show');
+            $('.sidebar-item a[href="#eventsSubmenu"]').attr('aria-expanded', 'true');
+        });
+    </script>
+} 

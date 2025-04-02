@@ -1,0 +1,333 @@
+﻿@model IEnumerable<ArtTicket.Domain.Models.Event>
+@{
+    ViewBag.Title = "Мероприятия - ArtTicket Moldova";
+}
+
+<style>
+    body {
+        font-family: 'Montserrat', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .navbar {
+        background-color: #343a40 !important;
+        padding: 15px 0;
+    }
+
+    .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+            url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center/cover;
+        padding: 100px 0 50px;
+        color: white;
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin-bottom: 30px;
+    }
+
+    .filters-section {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+
+    .filter-title {
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .event-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+        height: 450px;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .event-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .event-image {
+        height: 180px;
+        overflow: hidden;
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    .event-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .event-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: #6a3093;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+
+    .event-price {
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .event-content {
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .event-title {
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: #333;
+        font-size: 1.2rem;
+        height: 48px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .event-details {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .event-details p {
+        margin-bottom: 8px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .event-details p:last-child {
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        height: 60px;
+        overflow: hidden;
+    }
+
+    .event-details i {
+        margin-right: 5px;
+        color: #6a3093;
+    }
+
+    .btn-primary {
+        margin-top: auto;
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        border: none;
+        padding: 10px 25px;
+        border-radius: 5px;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(45deg, #5b2580, #8f35e3);
+    }
+
+    .pagination {
+        margin-top: 30px;
+        justify-content: center;
+    }
+
+    .page-link {
+        color: #6a3093;
+        border: none;
+        margin: 0 5px;
+        border-radius: 5px;
+    }
+
+    .page-item.active .page-link {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        border: none;
+    }
+
+    .form-control:focus {
+        border-color: #6a3093;
+        box-shadow: 0 0 0 0.2rem rgba(106, 48, 147, 0.25);
+    }
+
+    .custom-select:focus {
+        border-color: #6a3093;
+        box-shadow: 0 0 0 0.2rem rgba(106, 48, 147, 0.25);
+    }
+
+    .maintenance-container {
+        text-align: center;
+        padding: 80px 20px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 50px;
+    }
+
+    .maintenance-icon {
+        font-size: 5rem;
+        color: #6a3093;
+        margin-bottom: 30px;
+    }
+
+    .maintenance-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .maintenance-message {
+        font-size: 1.2rem;
+        color: #666;
+        margin-bottom: 30px;
+    }
+</style>
+
+<!-- Заголовок страницы -->
+<section class="hero-section">
+    <div class="container">
+        <h1 class="hero-title">Афиша культурных событий в Молдове</h1>
+        <p class="hero-subtitle">Найдите интересные мероприятия и купите билеты онлайн</p>
+    </div>
+</section>
+
+<!-- Основной контент -->
+<div class="container">
+    @if (ViewBag.MaintenanceMode == true)
+    {
+        <!-- Сообщение о технических работах -->
+        <div class="maintenance-container">
+            <div class="maintenance-icon">
+                <i class="fas fa-tools"></i>
+            </div>
+            <h2 class="maintenance-title">Техническое обслуживание</h2>
+            <p class="maintenance-message">
+                В настоящее время страница мероприятий находится на техническом обслуживании. 
+                Мы работаем над тем, чтобы сделать ваш опыт еще лучше. 
+                Пожалуйста, вернитесь позже.
+            </p>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
+                <i class="fas fa-home"></i> Вернуться на главную
+            </a>
+        </div>
+    }
+    else
+    {
+        <!-- Фильтры -->
+        <section class="filters-section">
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <h5 class="filter-title">Дата</h5>
+                    <input type="date" class="form-control">
+                </div>
+                <div class="col-md-3 mb-3">
+                    <h5 class="filter-title">Категория</h5>
+                    <select class="form-select">
+                        <option selected>Все категории</option>
+                        @foreach (var category in Model.Select(e => e.Category).Distinct())
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <h5 class="filter-title">Место проведения</h5>
+                    <select class="form-select">
+                        <option selected>Все площадки</option>
+                        @foreach (var venue in Model.Select(e => e.Venue).Distinct())
+                        {
+                            <option value="@venue.Id">@venue.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <h5 class="filter-title">Поиск</h5>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Ключевое слово">
+                        <button class="btn btn-primary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Карточки мероприятий -->
+        <div class="row">
+            @foreach (var eventItem in Model)
+            {
+                <div class="col-md-4">
+                    <div class="event-card">
+                        <div class="event-image">
+                            <img src="@(string.IsNullOrEmpty(eventItem.ImageUrl) ? "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" : eventItem.ImageUrl)" alt="@eventItem.Title">
+                            <div class="event-badge">@eventItem.Category.Name</div>
+                            <div class="event-price">@eventItem.Price.ToString("N0") MDL</div>
+                        </div>
+                        <div class="event-content">
+                            <h3 class="event-title">@eventItem.Title</h3>
+                            <div class="event-details">
+                                <p>
+                                    <i class="fas fa-calendar-alt"></i>
+                                    @eventItem.StartDate.ToString("dd.MM.yyyy HH:mm")
+                                </p>
+                            </div>
+                            <a href="@Url.Action("Details", "Events", new { id = eventItem.Id })" class="btn btn-primary w-100 mt-auto">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Пагинация -->
+        <nav>
+            <ul class="pagination">
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">4</a></li>
+                <li class="page-item"><a class="page-link" href="#">5</a></li>
+            </ul>
+        </nav>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Здесь при необходимости может быть дополнительный JavaScript для фильтрации
+    </script>
+} 

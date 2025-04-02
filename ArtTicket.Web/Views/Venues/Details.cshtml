@@ -1,0 +1,250 @@
+﻿@model ArtTicket.Domain.Models.Venue
+@{
+    ViewBag.Title = "Площадка " + Model.Name + " - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .venue-header {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        padding: 40px 0;
+        margin-bottom: 40px;
+        color: white;
+        text-align: center;
+    }
+
+    .venue-title {
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .venue-details-wrapper {
+        margin-bottom: 60px;
+    }
+
+    .venue-image-container {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+
+    .venue-image-container img {
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .venue-details-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .venue-details-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .detail-row {
+        display: flex;
+        margin-bottom: 15px;
+    }
+
+    .detail-label {
+        font-weight: 500;
+        width: 120px;
+        color: #666;
+    }
+
+    .detail-value {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .venue-description {
+        margin-top: 15px;
+        line-height: 1.6;
+        color: #333;
+    }
+
+    .venue-events-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #333;
+        margin: 30px 0 20px;
+    }
+
+    .venue-event-card {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        transition: transform 0.3s;
+    }
+
+    .venue-event-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .venue-event-image {
+        width: 100%;
+        height: 150px;
+        overflow: hidden;
+    }
+
+    .venue-event-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .venue-event-info {
+        padding: 15px;
+        background-color: white;
+    }
+
+    .venue-event-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .venue-event-date {
+        color: #666;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .venue-event-date i {
+        color: #a044ff;
+        margin-right: 8px;
+    }
+
+    .venue-event-link {
+        display: inline-block;
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+    }
+
+    .venue-event-link:hover {
+        background: linear-gradient(45deg, #5b2580, #8f35e3);
+        color: white;
+    }
+
+    .btn-back {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+    }
+
+    .btn-back:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+</style>
+
+<section class="venue-header">
+    <div class="container">
+        <h1 class="venue-title">@Model.Name</h1>
+        <p>@Model.City, @Model.Address</p>
+    </div>
+</section>
+
+<div class="container venue-details-wrapper">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="venue-image-container">
+                <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "https://via.placeholder.com/800x400?text=No+Image" : Model.ImageUrl)" alt="@Model.Name">
+            </div>
+            
+            <div class="venue-details-card">
+                <h2 class="venue-details-title">О площадке</h2>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Адрес:</span>
+                    <span class="detail-value">@Model.City, @Model.Address</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Вместимость:</span>
+                    <span class="detail-value">@Model.Capacity человек</span>
+                </div>
+                
+                <p class="venue-description">@Model.Description</p>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="venue-details-card">
+                <h2 class="venue-details-title">Информация</h2>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Город:</span>
+                    <span class="detail-value">@Model.City</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Мероприятия:</span>
+                    <span class="detail-value">
+                        @if (Model.Events != null && Model.Events.Any())
+                        {
+                            @Model.Events.Count
+                        }
+                        else
+                        {
+                            <span>0</span>
+                        }
+                    </span>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="@Url.Action("Index", "Venues")" class="btn btn-back">
+                    <i class="fas fa-arrow-left me-2"></i> Назад к площадкам
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    @if (Model.Events != null && Model.Events.Any())
+    {
+        <h2 class="venue-events-title">Предстоящие мероприятия</h2>
+        
+        <div class="row">
+            @foreach (var eventItem in Model.Events.Where(e => e.StartDate >= DateTime.Now).OrderBy(e => e.StartDate).Take(3))
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="venue-event-card">
+                        <div class="venue-event-image">
+                            <img src="@(string.IsNullOrEmpty(eventItem.ImageUrl) ? "https://via.placeholder.com/600x400?text=No+Image" : eventItem.ImageUrl)" alt="@eventItem.Title">
+                        </div>
+                        <div class="venue-event-info">
+                            <h3 class="venue-event-name">@eventItem.Title</h3>
+                            <div class="venue-event-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>@eventItem.StartDate.ToString("dd.MM.yyyy HH:mm")</span>
+                            </div>
+                            <a href="@Url.Action("Details", "Events", new { id = eventItem.Id })" class="venue-event-link">
+                                Узнать больше
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div> 

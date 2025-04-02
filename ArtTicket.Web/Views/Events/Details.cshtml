@@ -1,0 +1,634 @@
+﻿@model ArtTicket.Domain.Models.Event
+@{
+    ViewBag.Title = Model.Title + " - ArtTicket Moldova";
+}
+
+<style>
+    body {
+        font-family: 'Montserrat', sans-serif;
+        background-color: #f5f7fa;
+    }
+
+    /* Основные стили страницы */
+    .event-page {
+        padding-bottom: 60px;
+    }
+
+    /* Стили для шапки мероприятия */
+    .event-hero {
+        position: relative;
+        height: 450px;
+        margin-bottom: 30px;
+        border-radius: 0;
+        overflow: hidden;
+    }
+
+    .event-hero-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.6);
+    }
+
+    .event-hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7));
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 40px 0;
+    }
+
+    .event-title {
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 15px;
+        line-height: 1.2;
+    }
+
+    .event-meta {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    .event-meta-item {
+        display: flex;
+        align-items: center;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1rem;
+        margin-right: 25px;
+        margin-bottom: 10px;
+    }
+
+    .event-meta-item i {
+        margin-right: 8px;
+        opacity: 0.8;
+    }
+
+    .event-category-badge {
+        display: inline-block;
+        background-color: #6a3093;
+        color: white;
+        font-size: 0.85rem;
+        padding: 5px 15px;
+        border-radius: 30px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Стили для карточек */
+    .content-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+        padding: 30px;
+        margin-bottom: 30px;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .content-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f0f0f0;
+        position: relative;
+    }
+
+    .card-title::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        border-radius: 10px;
+    }
+
+    /* Стили для блока описания */
+    .event-description {
+        line-height: 1.9;
+        color: #555;
+        font-size: 1.05rem;
+    }
+
+    /* Стили для блока информации */
+    .info-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 15px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+    }
+
+    .info-icon {
+        min-width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+    }
+
+    .info-content {
+        flex: 1;
+    }
+
+    .info-label {
+        display: block;
+        font-size: 0.9rem;
+        color: #888;
+        margin-bottom: 5px;
+    }
+
+    .info-value {
+        font-weight: 500;
+        color: #333;
+        font-size: 1.05rem;
+    }
+
+    /* Стили для блока места проведения */
+    .venue-title {
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .venue-address {
+        color: #666;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .venue-address i {
+        color: #6a3093;
+        margin-right: 10px;
+    }
+
+    .map-container {
+        height: 300px;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 20px;
+    }
+
+    /* Стили для блока билетов */
+    .ticket-card {
+        background: linear-gradient(45deg, #6a3093, #a044ff);
+        border-radius: 12px;
+        padding: 30px;
+        color: white;
+        text-align: center;
+    }
+
+    .ticket-title {
+        font-size: 1.3rem;
+        margin-bottom: 25px;
+        font-weight: 600;
+    }
+
+    .ticket-price {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .ticket-note {
+        opacity: 0.8;
+        margin-bottom: 25px;
+    }
+
+    .btn-ticket {
+        background-color: white;
+        color: #6a3093;
+        font-weight: 600;
+        padding: 12px 15px;
+        border-radius: 30px;
+        display: block;
+        text-align: center;
+        transition: all 0.3s;
+        border: none;
+        font-size: 1.05rem;
+    }
+
+    .btn-ticket:hover {
+        background-color: rgba(255, 255, 255, 0.9);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        color: #6a3093;
+    }
+
+    /* Стили для блока отзывов */
+    .reviews-list {
+        margin-top: 10px;
+    }
+
+    .review-item {
+        padding: 20px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .review-item:last-child {
+        border-bottom: none;
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .reviewer-name {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .review-date {
+        color: #999;
+        font-size: 0.9rem;
+    }
+
+    .review-rating {
+        margin-bottom: 10px;
+    }
+
+    .review-rating i {
+        color: #ffba08;
+        font-size: 0.9rem;
+        margin-right: 2px;
+    }
+
+    .review-text {
+        color: #555;
+        line-height: 1.7;
+    }
+
+    .no-reviews {
+        color: #888;
+        text-align: center;
+        padding: 30px 0;
+    }
+
+    /* Стили для блока соцсетей */
+    .share-title {
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .share-buttons {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .btn-share {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .btn-share:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-share i {
+        margin-right: 8px;
+    }
+
+    .btn-facebook {
+        background-color: #3b5998;
+        color: white;
+    }
+
+    .btn-twitter {
+        background-color: #1da1f2;
+        color: white;
+    }
+
+    .btn-instagram {
+        background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        color: white;
+    }
+
+    .btn-whatsapp {
+        background-color: #25d366;
+        color: white;
+    }
+
+    .btn-facebook:hover, .btn-twitter:hover, .btn-instagram:hover, .btn-whatsapp:hover {
+        color: white;
+    }
+
+    /* Навигация */
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        color: #6a3093;
+        text-decoration: none;
+        font-weight: 500;
+        margin-bottom: 20px;
+        transition: all 0.3s;
+    }
+
+    .back-link:hover {
+        color: #a044ff;
+    }
+
+    .back-link i {
+        margin-right: 8px;
+    }
+
+    /* Адаптивность */
+    @@media (max-width: 992px) {
+        .event-title {
+            font-size: 2.2rem;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .event-hero {
+            height: 380px;
+        }
+        .event-title {
+            font-size: 1.8rem;
+        }
+        .event-meta-item {
+            font-size: 1rem;
+        }
+        .content-card {
+            padding: 20px;
+        }
+    }
+</style>
+
+<!-- Шапка мероприятия с изображением и основной информацией -->
+<div class="event-hero">
+    <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7" : Model.ImageUrl)" 
+         alt="@Model.Title" class="event-hero-img">
+    <div class="event-hero-overlay">
+        <div class="container">
+            <span class="event-category-badge">@Model.Category.Name</span>
+            <h1 class="event-title">@Model.Title</h1>
+            <div class="event-meta">
+                <div class="event-meta-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>@Model.StartDate.ToString("dd MMMM yyyy")</span>
+                </div>
+                <div class="event-meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span>@Model.StartDate.ToString("HH:mm")</span>
+                </div>
+                <div class="event-meta-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>@Model.Venue.Name</span>
+                </div>
+                <div class="event-meta-item">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>@Model.Price.ToString("N0") MDL</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Основное содержимое страницы -->
+<div class="container event-page">
+    <!-- Навигация назад к списку -->
+    <a href="@Url.Action("Index", "Events")" class="back-link">
+        <i class="fas fa-arrow-left"></i> Назад к списку мероприятий
+    </a>
+
+    <div class="row">
+        <!-- Основная колонка -->
+        <div class="col-lg-8">
+            <!-- Описание мероприятия -->
+            <div class="content-card">
+                <h2 class="card-title">О мероприятии</h2>
+                <div class="event-description">
+                    @Html.Raw(Model.Description.Replace("\n", "<br>"))
+                </div>
+            </div>
+
+            <!-- Место проведения -->
+            <div class="content-card">
+                <h2 class="card-title">Место проведения</h2>
+                <div class="venue-info">
+                    <h3 class="venue-title">@Model.Venue.Name</h3>
+                    <p class="venue-address">
+                        <i class="fas fa-map-marker-alt"></i>
+                        @Model.Venue.Address
+                    </p>
+                    <div class="map-container">
+                        <div style="width: 100%; height: 100%; background-color: #eee; display: flex; align-items: center; justify-content: center;">
+                            <p class="text-muted">Здесь будет карта</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Отзывы -->
+            <div class="content-card">
+                <h2 class="card-title">Отзывы</h2>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    @if (Request.IsAuthenticated)
+                    {
+                        <a href="@Url.Action("Create", "Reviews", new { eventId = Model.Id })" class="btn btn-primary">
+                            <i class="fas fa-comment"></i> Оставить отзыв
+                        </a>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info mb-0">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Чтобы оставить отзыв, пожалуйста, <a href="@Url.Action("Login", "Account", new { returnUrl = Request.Url.PathAndQuery })">войдите</a>.
+                        </div>
+                    }
+                    <a href="@Url.Action("Index", "Reviews", new { eventId = Model.Id })" class="btn btn-outline-primary">
+                        <i class="fas fa-comments"></i> Все отзывы
+                    </a>
+                </div>
+                
+                @if (Model.Reviews != null && Model.Reviews.Any())
+                {
+                    <div class="reviews-list">
+                        @foreach (var review in Model.Reviews)
+                        {
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <span class="reviewer-name">@review.User.FirstName @review.User.LastName</span>
+                                    <span class="review-date">@review.CreatedDate.ToString("dd.MM.yyyy")</span>
+                                </div>
+                                <div class="review-rating">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= review.Rating)
+                                        {
+                                            <i class="fas fa-star"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="far fa-star"></i>
+                                        }
+                                    }
+                                </div>
+                                <p class="review-text">@review.Comment</p>
+                                
+                                @if (Request.IsAuthenticated && (User.IsInRole("Admin") || review.User.Email == User.Identity.Name))
+                                {
+                                    <div class="review-actions mt-2">
+                                        <a href="@Url.Action("Edit", "Reviews", new { id = review.Id })" class="btn btn-sm btn-outline-primary me-2">
+                                            <i class="fas fa-edit"></i> Редактировать
+                                        </a>
+                                        <a href="@Url.Action("Delete", "Reviews", new { id = review.Id })" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i> Удалить
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="no-reviews">
+                        <i class="far fa-comment-alt mb-3 d-block text-center" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                        <p class="text-center">Пока нет отзывов об этом мероприятии.</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Боковая колонка -->
+        <div class="col-lg-4">
+            <!-- Билеты -->
+            <div class="ticket-card">
+                <h3 class="ticket-title">Билеты на мероприятие</h3>
+                <div class="ticket-price">
+                    @Model.Price.ToString("N0") MDL
+                </div>
+                <p class="ticket-note">Количество мест ограничено</p>
+                <a href="@Url.Action("Create", "Orders", new { eventId = Model.Id })" class="btn btn-ticket">Купить билет</a>
+            </div>
+
+            <!-- Информация -->
+            <div class="content-card">
+                <h2 class="card-title">Информация</h2>
+                <ul class="info-list">
+                    <li class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="info-content">
+                            <span class="info-label">Дата</span>
+                            <span class="info-value">@Model.StartDate.ToString("dd MMMM yyyy")</span>
+                        </div>
+                    </li>
+                    <li class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="info-content">
+                            <span class="info-label">Время</span>
+                            <span class="info-value">@Model.StartDate.ToString("HH:mm")</span>
+                        </div>
+                    </li>
+                    <li class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="info-content">
+                            <span class="info-label">Место</span>
+                            <span class="info-value">@Model.Venue.Name</span>
+                        </div>
+                    </li>
+                    <li class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-tag"></i>
+                        </div>
+                        <div class="info-content">
+                            <span class="info-label">Категория</span>
+                            <span class="info-value">@Model.Category.Name</span>
+                        </div>
+                    </li>
+                    <li class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="info-content">
+                            <span class="info-label">Цена</span>
+                            <span class="info-value">@Model.Price.ToString("N0") MDL</span>
+                        </div>
+                    </li>
+                    @if (Model.EndDate != DateTime.MinValue)
+                    {
+                        <li class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-hourglass-end"></i>
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">Окончание</span>
+                                <span class="info-value">@Model.EndDate.ToString("dd MMMM yyyy, HH:mm")</span>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <!-- Поделиться -->
+            <div class="content-card">
+                <h2 class="card-title">Поделиться</h2>
+                <div class="share-buttons">
+                    <a href="#" class="btn btn-share btn-facebook">
+                        <i class="fab fa-facebook-f"></i> Facebook
+                    </a>
+                    <a href="#" class="btn btn-share btn-twitter">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </a>
+                    <a href="#" class="btn btn-share btn-instagram">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </a>
+                    <a href="#" class="btn btn-share btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

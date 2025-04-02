@@ -1,0 +1,88 @@
+﻿@model ArtTicket.Domain.Models.Venue
+@{
+    ViewBag.Title = "Удаление площадки - ArtTicket Moldova";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-card">
+    <div class="admin-card-header bg-danger text-white">
+        <h2>Удаление площадки</h2>
+    </div>
+    <div class="admin-card-body">
+        <div class="text-center mb-4">
+            <i class="bi bi-exclamation-triangle-fill text-danger display-1 mb-3"></i>
+            <h3>Вы действительно хотите удалить эту площадку?</h3>
+            <p class="text-muted">Это действие нельзя будет отменить.</p>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Данные площадки</h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-3">Название:</dt>
+                            <dd class="col-sm-9">@Model.Name</dd>
+
+                            <dt class="col-sm-3">Адрес:</dt>
+                            <dd class="col-sm-9">@Model.City, @Model.Address</dd>
+
+                            <dt class="col-sm-3">Вместимость:</dt>
+                            <dd class="col-sm-9">@Model.Capacity человек</dd>
+
+                            <dt class="col-sm-3">Описание:</dt>
+                            <dd class="col-sm-9">@Model.Description</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Изображение</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <img src="@Model.ImageUrl" alt="@Model.Name" class="img-fluid" style="max-height: 200px">
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        @if (ViewBag.HasEvents == true)
+        {
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-circle-fill me-2"></i>
+                <strong>Внимание!</strong> Невозможно удалить площадку, так как с ней связаны мероприятия.
+                Сначала необходимо изменить площадку у этих мероприятий или удалить их.
+            </div>
+        }
+
+        @using (Html.BeginForm("Delete", "Venues", new { id = Model.Id }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            
+            <div class="d-flex justify-content-between">
+                <a href="@Url.Action("Admin", "Venues")" class="btn btn-admin-secondary">
+                    <i class="bi bi-arrow-left"></i> Отмена
+                </a>
+                <button type="submit" class="btn btn-admin-danger" @(ViewBag.HasEvents == true ? "disabled" : "")>
+                    <i class="bi bi-trash"></i> Удалить площадку
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Пометить активный пункт меню
+            $('.sidebar-item a[href="@Url.Action("Admin", "Venues")"]').parent().addClass('active');
+        });
+    </script>
+} 
