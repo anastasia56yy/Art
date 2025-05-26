@@ -42,6 +42,17 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="BusinessLogicFactory.cs" />
+        <Compile Include="BLogic\CartBL.cs" />
+        <Compile Include="BLogic\EventBL.cs" />
+        <Compile Include="BLogic\OrderBL.cs" />
+        <Compile Include="BLogic\ReviewBL.cs" />
+        <Compile Include="BLogic\UserBL.cs" />
+        <Compile Include="Interfaces\ICartBL.cs" />
+        <Compile Include="Interfaces\IEventBL.cs" />
+        <Compile Include="Interfaces\IOrderBL.cs" />
+        <Compile Include="Interfaces\IReviewBL.cs" />
+        <Compile Include="Interfaces\IUserBL.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="Services\ReviewService.cs" />
         <Compile Include="Services\UserService.cs" />
@@ -49,11 +60,11 @@
     <ItemGroup>
         <ProjectReference Include="..\ArtTicket.Domain\ArtTicket.Domain.csproj">
             <Project>{42d51c57-ff9e-46b1-9c29-fdbf93d1f2a1}</Project>
-            <Name>ArtTicket.Domain</Name>
+            <n>ArtTicket.Domain</n>
         </ProjectReference>
         <ProjectReference Include="..\ArtTicket.Infrastructure\ArtTicket.Infrastructure.csproj">
             <Project>{77c2be0c-7fce-406e-9c9f-85c71d1a54e8}</Project>
-            <Name>ArtTicket.Infrastructure</Name>
+            <n>ArtTicket.Infrastructure</n>
         </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>

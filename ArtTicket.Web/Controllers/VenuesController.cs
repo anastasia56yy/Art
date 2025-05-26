@@ -1,28 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
+using ArtTicket.Application;
+using ArtTicket.Application.Interfaces;
 using ArtTicket.Domain.Models;
-using ArtTicket.Infrastructure.Data;
 
 namespace ArtTicket.Web.Controllers
 {
     public class VenuesController : Controller
     {
-        private readonly ArtTicketDbContext _dbContext;
+        private readonly IEventBL _eventBL;
+        private readonly IUserBL _userBL;
 
         public VenuesController()
         {
-            _dbContext = new ArtTicketDbContext();
+            var factory = BusinessLogicFactory.Instance;
+            _eventBL = factory.GetEventBL();
+            _userBL = factory.GetUserBL();
         }
 
         // GET: Venues
         public ActionResult Index()
         {
-            var venues = _dbContext.Venues.ToList();
+            var venues = _eventBL.GetVenues();
             return View(venues);
         }
 
@@ -34,9 +33,7 @@ namespace ArtTicket.Web.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var venue = _dbContext.Venues
-                .Include(v => v.Events)
-                .FirstOrDefault(v => v.Id == id);
+            var venue = _eventBL.GetVenueById(id.Value);
 
             if (venue == null)
             {
@@ -47,27 +44,47 @@ namespace ArtTicket.Web.Controllers
         }
 
         // GET: Venues/Admin
+        [Authorize]
         public ActionResult Admin()
         {
-            var venues = _dbContext.Venues.ToList();
+            // Проверяем, имеет ли пользователь права администратора
+            if (!_userBL.IsUserAdmin(User.Identity.Name))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            
+            var venues = _eventBL.GetVenues();
             return View(venues);
         }
 
         // GET: Venues/Create
+        [Authorize]
         public ActionResult Create()
         {
+            // Проверяем, имеет ли пользователь права администратора
+            if (!_userBL.IsUserAdmin(User.Identity.Name))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            
             return View();
         }
 
         // POST: Venues/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create([Bind(Include = "Name,Address,City,Description,Capacity,ImageUrl")] Venue venue)
         {
+            // Проверяем, имеет ли пользователь права администратора
+            if (!_userBL.IsUserAdmin(User.Identity.Name))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            
             if (ModelState.IsValid)
             {
-                _dbContext.Venues.Add(venue);
-                _dbContext.SaveChanges();
+                _eventBL.CreateVenue(venue);
                 return RedirectToAction("Admin");
             }
 
@@ -75,14 +92,21 @@ namespace ArtTicket.Web.Controllers
         }
 
         // GET: Venues/Edit/5
+        [Authorize]
         public ActionResult Edit(int? id)
         {
+            // Проверяем, имеет ли пользователь права администратора
+            if (!_userBL.IsUserAdmin(User.Identity.Name))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var venue = _dbContext.Venues.Find(id);
+            var venue = _eventBL.GetVenueById(id.Value);
             if (venue == null)
             {
                 return HttpNotFound();
@@ -94,12 +118,18 @@ namespace ArtTicket.Web.Controllers
         // POST: Venues/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit([Bind(Include = "Id,Name,Address,City,Description,Capacity,ImageUrl")] Venue venue)
         {
+            // Проверяем, имеет ли пользователь права администратора
+            if (!_userBL.IsUserAdmin(User.Identity.Name))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            
             if (ModelState.IsValid)
             {
-                _dbContext.Entry(venue).State = EntityState.Modified;
-                _dbContext.SaveChanges();
+                _eventBL.UpdateVenue(venue);
                 return RedirectToAction("Admin");
             }
 
@@ -107,21 +137,28 @@ namespace ArtTicket.Web.Controllers
         }
 
         // GET: Venues/Delete/5
+        [Authorize]
         public ActionResult Delete(int? id)
         {
+            // Проверяем, имеет ли пользователь права администратора
+            if (!_userBL.IsUserAdmin(User.Identity.Name))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var venue = _dbContext.Venues.Find(id);
+            var venue = _eventBL.GetVenueById(id.Value);
             if (venue == null)
             {
                 return HttpNotFound();
             }
 
             // Проверяем, есть ли мероприятия, связанные с этой площадкой
-            var hasEvents = _dbContext.Events.Any(e => e.VenueId == id);
+            var hasEvents = _eventBL.HasEventsForVenue(id.Value);
             ViewBag.HasEvents = hasEvents;
 
             return View(venue);
@@ -130,31 +167,27 @@ namespace ArtTicket.Web.Controllers
         // POST: Venues/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult DeleteConfirmed(int id)
         {
-            var venue = _dbContext.Venues.Find(id);
-
+            // Проверяем, имеет ли пользователь права администратора
+            if (!_userBL.IsUserAdmin(User.Identity.Name))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            
             // Проверяем, есть ли мероприятия, связанные с этой площадкой
-            var hasEvents = _dbContext.Events.Any(e => e.VenueId == id);
+            var hasEvents = _eventBL.HasEventsForVenue(id);
             if (hasEvents)
             {
+                var venue = _eventBL.GetVenueById(id);
                 ModelState.AddModelError("", "Невозможно удалить площадку, так как с ней связаны мероприятия.");
                 ViewBag.HasEvents = true;
-                return View(venue);
+                return View("Delete", venue);
             }
 
-            _dbContext.Venues.Remove(venue);
-            _dbContext.SaveChanges();
+            _eventBL.DeleteVenue(id);
             return RedirectToAction("Admin");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _dbContext.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 } 

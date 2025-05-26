@@ -7,12 +7,17 @@ namespace ArtTicket.Domain.Models
     {
         public int Id { get; set; }
         public DateTime OrderDate { get; set; }
-        public decimal TotalAmount { get; set; }
-        public string Status { get; set; } // Pending, Paid, Cancelled
+        public decimal TotalPrice { get; set; }
+        public string Status { get; set; } // Создан, Оплачен, Обработан, Доставлен, Отменен
         public int UserId { get; set; }
         
         // Навигационные свойства
         public virtual User User { get; set; }
-        public virtual ICollection<Ticket> Tickets { get; set; }
+        public virtual ICollection<OrderItem> Items { get; set; }
+        
+        public Order()
+        {
+            Items = new HashSet<OrderItem>();
+        }
     }
 } 

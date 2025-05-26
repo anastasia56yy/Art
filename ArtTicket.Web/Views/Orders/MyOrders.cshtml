@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ArtTicket.Domain.Models.Order>
+﻿@model IEnumerable<ArtTicket.Web.Models.ViewModels.OrderViewModel>
+@using ArtTicket.Web.Models.ViewModels
 @{
     ViewBag.Title = "Мои заказы - ArtTicket Moldova";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -268,7 +269,7 @@
                         <hr>
                         <div class="summary-row">
                             <span class="summary-label">Общая сумма заказов:</span>
-                            <span class="summary-value">@Model.Where(o => o.Status != "Cancelled").Sum(o => o.TotalAmount).ToString("N0") MDL</span>
+                            <span class="summary-value">@Model.Where(o => o.Status != "Cancelled").Sum(o => o.TotalPrice).ToString("N0") MDL</span>
                         </div>
                     </div>
                 
@@ -301,14 +302,14 @@
                             
                             <div class="order-body">
                                 <div class="order-total">
-                                    <i class="fas fa-receipt me-2"></i> Сумма заказа: @order.TotalAmount.ToString("N0") MDL
+                                    <i class="fas fa-receipt me-2"></i> Сумма заказа: @order.TotalPrice.ToString("N0") MDL
                                 </div>
                                 
                                 @{
                                     // Группировка билетов по мероприятиям
-                                    var ticketsByEvent = order.Tickets
+                                    var ticketsByEvent = order.Items
                                         .GroupBy(t => t.EventId)
-                                        .Select(g => new 
+                                        .Select(g => new EventGroupViewModel
                                         { 
                                             Event = g.First().Event, 
                                             TicketCount = g.Count(),

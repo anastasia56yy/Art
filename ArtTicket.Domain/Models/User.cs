@@ -17,5 +17,13 @@ namespace ArtTicket.Domain.Models
         // Навигационные свойства
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
+        public virtual ICollection<CartItem> CartItems { get; set; }
+        
+        public User()
+        {
+            Orders = new HashSet<Order>();
+            Reviews = new HashSet<Review>();
+            CartItems = new HashSet<CartItem>();
+        }
     }
 } 

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace ArtTicket.Domain.Models
 {
     public class Ticket
@@ -12,6 +14,13 @@ namespace ArtTicket.Domain.Models
         // Навигационные свойства
         public virtual Event Event { get; set; }
         public virtual TicketType TicketType { get; set; }
-        public virtual Order Order { get; set; }
+        public virtual ICollection<CartItem> CartItems { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
+        
+        public Ticket()
+        {
+            CartItems = new HashSet<CartItem>();
+            OrderItems = new HashSet<OrderItem>();
+        }
     }
 } 

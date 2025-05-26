@@ -1,37 +1,51 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using ArtTicket.Domain.Models;
-using ArtTicket.Infrastructure.Data;
+using ArtTicket.Application;
+using ArtTicket.Application.Interfaces;
 
 namespace ArtTicket.Web.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
-        private readonly ArtTicketDbContext _dbContext;
+        private readonly IUserBL _userBL;
+        private readonly IEventBL _eventBL;
 
         public AdminController()
         {
-            _dbContext = new ArtTicketDbContext();
+            var factory = BusinessLogicFactory.Instance;
+            _userBL = factory.GetUserBL();
+            _eventBL = factory.GetEventBL();
         }
 
         // GET: Admin - Dashboard
         public ActionResult Index()
         {
+            // Проверяем, имеет ли пользователь права администратора
+            if (!_userBL.IsUserAdmin(User.Identity.Name))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Получаем статистические данные
+            var events = _eventBL.GetAllEvents();
+            var venues = _eventBL.GetVenues();
+            var categories = _eventBL.GetCategories();
+
             var dashboardStats = new Dictionary<string, int>
             {
-                { "EventsCount", _dbContext.Events.Count() },
-                { "VenuesCount", _dbContext.Venues.Count() },
-                { "CategoriesCount", _dbContext.EventCategories.Count() },
-                { "UpcomingEventsCount", _dbContext.Events.Count(e => e.StartDate > DateTime.Now) },
-                { "OngoingEventsCount", _dbContext.Events.Count(e => e.StartDate <= DateTime.Now && e.EndDate >= DateTime.Now) },
-                { "PastEventsCount", _dbContext.Events.Count(e => e.EndDate < DateTime.Now) }
+                { "EventsCount", events.Count },
+                { "VenuesCount", venues.Count },
+                { "CategoriesCount", categories.Count },
+                { "UpcomingEventsCount", events.Count(e => e.StartDate > DateTime.Now) },
+                { "OngoingEventsCount", events.Count(e => e.StartDate <= DateTime.Now && e.EndDate >= DateTime.Now) },
+                { "PastEventsCount", events.Count(e => e.EndDate < DateTime.Now) }
             };
 
-            // Get recent events
-            var recentEvents = _dbContext.Events
+            // Получаем недавние события
+            var recentEvents = events
                 .OrderByDescending(e => e.StartDate)
                 .Take(5)
                 .ToList();
@@ -46,7 +60,7 @@ namespace ArtTicket.Web.Controllers
         {
             if (disposing)
             {
-                _dbContext.Dispose();
+                // Dispose any other resources if needed
             }
             base.Dispose(disposing);
         }

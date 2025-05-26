@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ArtTicket.Domain.Models.Order>
+﻿@model IEnumerable<ArtTicket.Web.Models.ViewModels.OrderViewModel>
 @{
     ViewBag.Title = "Управление заказами - ArtTicket Moldova";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -212,15 +212,15 @@
                             <tr>
                                 <td><span class="order-id">#@order.Id</span></td>
                                 <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
-                                <td>@order.User.FirstName @order.User.LastName</td>
+                                <td>@order.UserName</td>
                                 <td>
-                                    @if (order.Tickets != null && order.Tickets.Any())
+                                    @if (order.Items != null && order.Items.Any())
                                     {
-                                        @order.Tickets.First().Event.Title
+                                        @order.Items.First().EventTitle
                                     }
                                 </td>
-                                <td>@order.Tickets.Count</td>
-                                <td>@order.TotalAmount.ToString("N0") MDL</td>
+                                <td>@(order.Items != null ? order.Items.Count : 0)</td>
+                                <td>@order.TotalPrice.ToString("N0") MDL</td>
                                 <td>
                                     @switch(order.Status)
                                     {

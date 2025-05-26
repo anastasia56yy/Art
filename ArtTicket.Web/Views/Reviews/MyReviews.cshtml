@@ -1,4 +1,4 @@
-﻿@model List<ArtTicket.Domain.Models.Review>
+﻿@model List<ArtTicket.Web.Models.ViewModels.ReviewViewModel>
 @{
     ViewBag.Title = "Мои отзывы - ArtTicket Moldova";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -143,7 +143,7 @@
                 <div class="review-card">
                     <div class="review-header">
                         <div>
-                            <h5 class="review-title">@review.Event.Title</h5>
+                            <h5 class="review-title">@review.EventTitle</h5>
                             <div class="review-date">
                                 <i class="fas fa-calendar-alt me-1"></i> @review.CreatedDate.ToString("dd.MM.yyyy")
                             </div>
@@ -151,12 +151,12 @@
                         <div class="star-rating">
                             @for (int i = 1; i <= 5; i++)
                             {
-                                <i class="fas @(i <= review.Rating ? "fa-star" : "fa-star-o")"></i>
+                                <i class="fas @(i <= (review.Rating) ? "fa-star" : "fa-star-o")"></i>
                             }
                         </div>
                     </div>
                     <div class="review-body">
-                        <p class="review-comment">@review.Comment</p>
+                        <p class="review-comment">@review.Text</p>
                         <div class="action-buttons">
                             <a href="@Url.Action("Details", "Events", new { id = review.EventId })" class="btn btn-sm btn-details">
                                 <i class="fas fa-external-link-alt me-1"></i> Перейти к мероприятию

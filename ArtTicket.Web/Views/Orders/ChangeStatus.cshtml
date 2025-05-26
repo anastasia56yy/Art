@@ -1,4 +1,4 @@
-﻿@model ArtTicket.Domain.Models.Order
+﻿@model ArtTicket.Web.Models.ViewModels.OrderViewModel
 @{
     ViewBag.Title = "Изменение статуса заказа #" + Model.Id + " - ArtTicket Moldova";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -148,17 +148,17 @@
             
             <div class="info-row">
                 <span class="info-label">Клиент:</span>
-                <span class="info-value">@Model.User.FirstName @Model.User.LastName (@Model.User.Email)</span>
+                <span class="info-value">@Model.UserName</span>
             </div>
             
             <div class="info-row">
                 <span class="info-label">Количество билетов:</span>
-                <span class="info-value">@Model.Tickets.Count</span>
+                <span class="info-value">@(Model.Items != null ? Model.Items.Count : 0)</span>
             </div>
             
             <div class="info-row">
                 <span class="info-label">Сумма заказа:</span>
-                <span class="info-value">@Model.TotalAmount.ToString("N0") MDL</span>
+                <span class="info-value">@Model.TotalPrice.ToString("N0") MDL</span>
             </div>
             
             <div class="info-row">

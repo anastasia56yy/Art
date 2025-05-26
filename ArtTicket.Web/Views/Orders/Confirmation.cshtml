@@ -1,4 +1,4 @@
-﻿@model ArtTicket.Domain.Models.Order
+﻿@model ArtTicket.Web.Models.ViewModels.OrderViewModel
 @{
     ViewBag.Title = "Заказ оформлен - ArtTicket Moldova";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -149,42 +149,40 @@
                     
                     <div class="detail-row">
                         <span class="detail-label">Сумма заказа:</span>
-                        <span class="detail-value">@Model.TotalAmount.ToString("N0") MDL</span>
+                        <span class="detail-value">@Model.TotalPrice.ToString("N0") MDL</span>
                     </div>
                     
                     <div class="detail-row">
                         <span class="detail-label">Количество билетов:</span>
-                        <span class="detail-value">@Model.Tickets.Count</span>
+                        <span class="detail-value">@(Model.Items != null ? Model.Items.Count : 0)</span>
                     </div>
                 </div>
                 
                 <h3 class="order-details-title">Билеты</h3>
                 
-                @foreach (var ticket in Model.Tickets)
+                @if (Model.Items != null)
                 {
-                    <div class="ticket-card">
-                        <h4 class="ticket-title">@ticket.Event.Title</h4>
-                        
-                        <div class="ticket-info">
-                            <span>Дата и время:</span>
-                            <span>@ticket.Event.StartDate.ToString("dd.MM.yyyy HH:mm")</span>
+                    foreach (var item in Model.Items)
+                    {
+                        <div class="ticket-card">
+                            <h4 class="ticket-title">@item.EventTitle</h4>
+                            
+                            <div class="ticket-info">
+                                <span>Тип билета:</span>
+                                <span>@item.TicketTypeName</span>
+                            </div>
+                            
+                            <div class="ticket-info">
+                                <span>Количество:</span>
+                                <span>@item.Quantity</span>
+                            </div>
+                            
+                            <div class="ticket-info">
+                                <span>Цена:</span>
+                                <span>@item.Price.ToString("N0") MDL</span>
+                            </div>
                         </div>
-                        
-                        <div class="ticket-info">
-                            <span>Место проведения:</span>
-                            <span>@ticket.Event.Venue.Name</span>
-                        </div>
-                        
-                        <div class="ticket-info">
-                            <span>Номер места:</span>
-                            <span>@ticket.SeatNumber</span>
-                        </div>
-                        
-                        <div class="ticket-info">
-                            <span>Цена:</span>
-                            <span>@ticket.Price.ToString("N0") MDL</span>
-                        </div>
-                    </div>
+                    }
                 }
                 
                 <div class="alert alert-info my-4">
@@ -271,7 +269,7 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
                                 <button type="button" class="btn btn-primary" id="confirmPaymentBtn">
-                                    Оплатить <span class="ms-2">@Model.TotalAmount.ToString("N0") MDL</span>
+                                    Оплатить <span class="ms-2">@Model.TotalPrice.ToString("N0") MDL</span>
                                 </button>
                             </div>
                         </div>

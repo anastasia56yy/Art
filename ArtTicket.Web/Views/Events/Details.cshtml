@@ -1,4 +1,4 @@
-﻿@model ArtTicket.Domain.Models.Event
+﻿@model ArtTicket.Web.Models.ViewModels.EventViewModel
 @{
     ViewBag.Title = Model.Title + " - ArtTicket Moldova";
 }
@@ -492,13 +492,13 @@
                         {
                             <div class="review-item">
                                 <div class="review-header">
-                                    <span class="reviewer-name">@review.User.FirstName @review.User.LastName</span>
+                                    <span class="reviewer-name">@review.UserName</span>
                                     <span class="review-date">@review.CreatedDate.ToString("dd.MM.yyyy")</span>
                                 </div>
                                 <div class="review-rating">
                                     @for (int i = 1; i <= 5; i++)
                                     {
-                                        if (i <= review.Rating)
+                                        if (i <= (review.Rating))
                                         {
                                             <i class="fas fa-star"></i>
                                         }
@@ -508,9 +508,9 @@
                                         }
                                     }
                                 </div>
-                                <p class="review-text">@review.Comment</p>
+                                <p class="review-text">@review.Text</p>
                                 
-                                @if (Request.IsAuthenticated && (User.IsInRole("Admin") || review.User.Email == User.Identity.Name))
+                                @if (Request.IsAuthenticated && (User.IsInRole("Admin") || review.UserEmail == User.Identity.Name))
                                 {
                                     <div class="review-actions mt-2">
                                         <a href="@Url.Action("Edit", "Reviews", new { id = review.Id })" class="btn btn-sm btn-outline-primary me-2">

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -59,7 +58,7 @@ namespace ArtTicket.Application.Services
             var existingReview = _dbContext.Reviews.Find(review.Id);
             if (existingReview != null)
             {
-                existingReview.Comment = review.Comment;
+                existingReview.Text = review.Text;
                 existingReview.Rating = review.Rating;
                 _dbContext.SaveChanges();
             }

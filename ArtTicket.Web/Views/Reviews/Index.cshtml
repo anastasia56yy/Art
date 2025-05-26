@@ -1,8 +1,8 @@
-﻿@model IEnumerable<ArtTicket.Domain.Models.Review>
+﻿@model IEnumerable<ArtTicket.Web.Models.ViewModels.ReviewViewModel>
 @{
     ViewBag.Title = "Отзывы - ArtTicket Moldova";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var eventItem = ViewBag.Event as ArtTicket.Domain.Models.Event;
+    var eventItem = ViewBag.Event as ArtTicket.Web.Models.ViewModels.EventViewModel;
 }
 
 <style>
@@ -345,14 +345,14 @@
                                         <i class="fas fa-user"></i>
                                     </div>
                                     <div>
-                                        <div class="reviewer-name">@review.User.FirstName</div>
+                                        <div class="reviewer-name">@review.UserName</div>
                                         <div class="review-date">@review.CreatedDate.ToString("dd.MM.yyyy HH:mm")</div>
                                     </div>
                                 </div>
                                 <div class="review-rating">
                                     @for (int i = 1; i <= 5; i++)
                                     {
-                                        if (i <= review.Rating)
+                                        if (i <= (review.Rating))
                                         {
                                             <i class="fas fa-star star-filled"></i>
                                         }
@@ -364,7 +364,7 @@
                                 </div>
                             </div>
                             <div class="review-content">
-                                @review.Comment
+                                @review.Text
                             </div>
                         </div>
                     }

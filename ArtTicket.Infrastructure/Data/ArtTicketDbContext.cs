@@ -17,6 +17,8 @@ namespace ArtTicket.Infrastructure.Data
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
         
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -34,6 +36,13 @@ namespace ArtTicket.Infrastructure.Data
                 .HasMany(u => u.Reviews)
                 .WithRequired(r => r.User)
                 .HasForeignKey(r => r.UserId)
+                .WillCascadeOnDelete(false);
+                
+            // User - CartItem (один ко многим)
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.CartItems)
+                .WithRequired(c => c.User)
+                .HasForeignKey(c => c.UserId)
                 .WillCascadeOnDelete(false);
                 
             // Venue - Event (один ко многим)
@@ -71,10 +80,25 @@ namespace ArtTicket.Infrastructure.Data
                 .HasForeignKey(t => t.TicketTypeId)
                 .WillCascadeOnDelete(false);
                 
-            // Order - Ticket (один ко многим)
+            // Order - OrderItems (один ко многим)
             modelBuilder.Entity<Order>()
-                .HasMany(o => o.Tickets)
-                .WithOptional(t => t.Order)
+                .HasMany(o => o.Items)
+                .WithRequired(i => i.Order)
+                .HasForeignKey(i => i.OrderId)
+                .WillCascadeOnDelete(false);
+                
+            // Ticket - CartItems (один ко многим)
+            modelBuilder.Entity<Ticket>()
+                .HasMany(t => t.CartItems)
+                .WithRequired(c => c.Ticket)
+                .HasForeignKey(c => c.TicketId)
+                .WillCascadeOnDelete(false);
+                
+            // Ticket - OrderItems (один ко многим)
+            modelBuilder.Entity<Ticket>()
+                .HasMany(t => t.OrderItems)
+                .WithRequired(i => i.Ticket)
+                .HasForeignKey(i => i.TicketId)
                 .WillCascadeOnDelete(false);
                 
             base.OnModelCreating(modelBuilder);

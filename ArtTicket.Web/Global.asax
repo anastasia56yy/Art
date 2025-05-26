@@ -1,0 +1,1 @@
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="ArtTicket.Web.MvcApplication" Language="C#" %>

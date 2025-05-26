@@ -46,6 +46,15 @@
         <Reference Include="System.Xml"/>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="DTOs\AuthResultDto.cs"/>
+        <Compile Include="DTOs\CartResultDto.cs"/>
+        <Compile Include="DTOs\EventDto.cs"/>
+        <Compile Include="DTOs\OrderDto.cs"/>
+        <Compile Include="DTOs\ReviewDto.cs"/>
+        <Compile Include="DTOs\TicketDto.cs"/>
+        <Compile Include="DTOs\UserDto.cs"/>
+        <Compile Include="Models\CartItem.cs"/>
+        <Compile Include="Models\OrderItem.cs"/>
         <Compile Include="Models\User.cs"/>
         <Compile Include="Models\Venue.cs"/>
         <Compile Include="Models\EventCategory.cs"/>

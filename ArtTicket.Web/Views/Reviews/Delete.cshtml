@@ -1,4 +1,4 @@
-﻿@model ArtTicket.Domain.Models.Review
+﻿@model ArtTicket.Web.Models.ViewModels.ReviewViewModel
 @{
     ViewBag.Title = "Удаление отзыва - ArtTicket Moldova";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -133,7 +133,7 @@
                     <i class="fas @(i <= Model.Rating ? "fa-star" : "fa-star-o")"></i>
                 }
             </div>
-            <p class="review-comment">@Model.Comment</p>
+            <p class="review-comment">@Model.Text</p>
         </div>
 
         @using (Html.BeginForm())

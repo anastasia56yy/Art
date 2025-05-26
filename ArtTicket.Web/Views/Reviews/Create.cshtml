@@ -1,4 +1,4 @@
-﻿@model ArtTicket.Web.Controllers.ReviewViewModel
+﻿@model ArtTicket.Web.Models.ViewModels.ReviewViewModel
 @{
     ViewBag.Title = "Оставить отзыв - ArtTicket Moldova";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -184,9 +184,9 @@
                     </div>
 
                     <div class="form-group mb-4">
-                        <label for="Comment" class="form-label">Ваш отзыв</label>
-                        @Html.TextAreaFor(model => model.Comment, new { @class = "form-control", rows = "5", placeholder = "Поделитесь вашими впечатлениями о мероприятии...", required = "required" })
-                        @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
+                        <label for="Text" class="form-label">Ваш отзыв</label>
+                        @Html.TextAreaFor(model => model.Text, new { @class = "form-control", rows = "5", placeholder = "Поделитесь вашими впечатлениями о мероприятии...", required = "required" })
+                        @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger" })
                     </div>
                     
                     <div class="d-flex justify-content-between mt-4">

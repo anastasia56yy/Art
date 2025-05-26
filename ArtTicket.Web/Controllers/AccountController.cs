@@ -1,60 +1,59 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using ArtTicket.Domain.Models;
-using ArtTicket.Infrastructure.Data;
+using ArtTicket.Application;
+using ArtTicket.Application.Interfaces;
+using ArtTicket.Web.Models.ViewModels;
 
 namespace ArtTicket.Web.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly ArtTicketDbContext _dbContext;
+        private readonly IUserBL _userBL;
 
         public AccountController()
         {
-            _dbContext = new ArtTicketDbContext();
+            var factory = BusinessLogicFactory.Instance;
+            _userBL = factory.GetUserBL();
         }
 
         // GET: Account/Login
         public ActionResult Login(string returnUrl)
         {
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
+            var model = new LoginViewModel { ReturnUrl = returnUrl };
+            return View(model);
         }
 
         // POST: Account/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string email, string password, bool? rememberMe = false, string returnUrl = null)
+        public ActionResult Login(LoginViewModel model)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Введите email и пароль");
-                return View();
+                return View(model);
             }
 
-            // Простая проверка учетных данных
-            var user = _dbContext.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null || !VerifyPassword(password, user.PasswordHash))
+            var result = _userBL.Login(model.Email, model.Password, model.RememberMe);
+
+            if (!result.IsAuthenticated)
             {
-                ModelState.AddModelError("", "Неверный email или пароль");
-                return View();
+                ModelState.AddModelError("", result.ErrorMessage);
+                return View(model);
             }
 
             // Аутентификация прошла успешно
-            FormsAuthentication.SetAuthCookie(email, rememberMe ?? false);
+            FormsAuthentication.SetAuthCookie(model.Email, model.RememberMe);
 
             // Сохраняем дополнительные данные в сессии
-            Session["UserId"] = user.Id;
-            Session["UserName"] = $"{user.FirstName} {user.LastName}";
-            Session["UserRole"] = user.Role;
+            Session["UserId"] = result.UserId;
+            Session["UserName"] = result.UserName;
+            Session["UserRole"] = result.Role;
 
-            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
             {
-                return Redirect(returnUrl);
+                return Redirect(model.ReturnUrl);
             }
             else
             {
@@ -65,55 +64,33 @@ namespace ArtTicket.Web.Controllers
         // GET: Account/Register
         public ActionResult Register()
         {
-            return View();
+            return View(new RegisterViewModel());
         }
 
         // POST: Account/Register
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(string firstName, string lastName, string email, string phoneNumber, string password, string confirmPassword)
+        public ActionResult Register(RegisterViewModel model)
         {
-            if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName) || 
-                string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Все поля обязательны для заполнения");
-                return View();
+                return View(model);
             }
 
-            if (password != confirmPassword)
+            var result = _userBL.Register(model.FirstName, model.LastName, model.Email, model.PhoneNumber, model.Password);
+
+            if (!result.IsAuthenticated)
             {
-                ModelState.AddModelError("", "Пароли не совпадают");
-                return View();
+                ModelState.AddModelError("", result.ErrorMessage);
+                return View(model);
             }
-
-            // Проверяем, что пользователь с таким email еще не зарегистрирован
-            if (_dbContext.Users.Any(u => u.Email == email))
-            {
-                ModelState.AddModelError("", "Пользователь с таким email уже существует");
-                return View();
-            }
-
-            // Создаем нового пользователя
-            var user = new User
-            {
-                Email = email,
-                PasswordHash = HashPassword(password),
-                FirstName = firstName,
-                LastName = lastName,
-                PhoneNumber = phoneNumber,
-                RegistrationDate = DateTime.Now,
-                Role = "User", // По умолчанию обычный пользователь
-            };
-
-            _dbContext.Users.Add(user);
-            _dbContext.SaveChanges();
 
             // Автоматически авторизуем пользователя после регистрации
-            FormsAuthentication.SetAuthCookie(email, false);
+            FormsAuthentication.SetAuthCookie(model.Email, false);
 
-            Session["UserId"] = user.Id;
-            Session["UserName"] = $"{user.FirstName} {user.LastName}";
-            Session["UserRole"] = user.Role;
+            Session["UserId"] = result.UserId;
+            Session["UserName"] = result.UserName;
+            Session["UserRole"] = result.Role;
 
             return RedirectToAction("Index", "Home");
         }
@@ -142,38 +119,14 @@ namespace ArtTicket.Web.Controllers
         public ActionResult Profile()
         {
             var email = User.Identity.Name;
-            var user = _dbContext.Users.FirstOrDefault(u => u.Email == email);
+            var userDto = _userBL.GetUserByEmail(email);
             
-            if (user == null)
+            if (userDto == null)
             {
                 return RedirectToAction("Login");
             }
 
-            return View(user);
-        }
-
-        // Вспомогательные методы для работы с паролями
-        private string HashPassword(string password)
-        {
-            // Простая реализация хеширования пароля
-            // В реальном проекте используйте более надежное хеширование
-            return FormsAuthentication.HashPasswordForStoringInConfigFile(password, "SHA1");
-        }
-
-        private bool VerifyPassword(string password, string passwordHash)
-        {
-            // Проверка соответствия пароля хешу
-            var hashedPassword = FormsAuthentication.HashPasswordForStoringInConfigFile(password, "SHA1");
-            return hashedPassword == passwordHash;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _dbContext.Dispose();
-            }
-            base.Dispose(disposing);
+            return View(userDto);
         }
     }
 } 
